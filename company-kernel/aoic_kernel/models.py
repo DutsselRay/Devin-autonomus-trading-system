@@ -636,6 +636,29 @@ class LaunchDecision(BaseModel):
     rationale: str = ""
 
 
+class MaturityLevel(str, Enum):
+    FAIL = "FAIL"
+    PARTIAL = "PARTIAL"
+    PASS = "PASS"
+
+
+class MaturityCriterion(BaseModel):
+    criterion_id: str
+    name: str
+    description: str
+    level: MaturityLevel = MaturityLevel.FAIL
+    evidence: list[str] = Field(default_factory=list)
+    updated_at: Optional[datetime] = None
+
+
+class MaturityScore(BaseModel):
+    scorecard_id: str
+    evaluated_at: datetime
+    criteria: list[MaturityCriterion] = Field(default_factory=list)
+    overall_10_of_10: bool = False
+    average: Optional[float] = None
+
+
 class CampaignStatus(str, Enum):
     DRAFT = "DRAFT"
     REVIEWED = "REVIEWED"

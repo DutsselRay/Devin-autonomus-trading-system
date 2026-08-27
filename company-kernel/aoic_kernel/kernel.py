@@ -33,6 +33,7 @@ from aoic_kernel.procurement import Procurement
 from aoic_kernel.enterprise_audit import EnterpriseAuditor
 from aoic_kernel.red_team import RedTeam
 from aoic_kernel.b2b_gate import B2BGate
+from aoic_kernel.maturity_evaluator import MaturityEvaluator
 
 
 class CompanyKernel:
@@ -91,3 +92,4 @@ class CompanyKernel:
         self.enterprise_audit = EnterpriseAuditor()
         self.red_team = RedTeam()
         self.b2b_gate = B2BGate()
+        self.maturity = MaturityEvaluator()
