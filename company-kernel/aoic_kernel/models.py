@@ -438,3 +438,67 @@ class DurableLearning(BaseModel):
     effective_sample_size: int = 0
     validated_by: list[str] = Field(default_factory=list)
     status: str = "PROPOSED"  # PROPOSED, REPLICATED, APPROVED, RETIRED
+
+
+class CapabilityProposal(BaseModel):
+    proposal_id: str
+    agent_id: str
+    agent_version: str
+    proposer: str
+    capability_gap: str
+    expected_value: dict[str, Any] = Field(default_factory=dict)
+    source_reviewed: bool = False
+    license_approved: bool = False
+    security_reviewed: bool = False
+    charter_contract: Optional[AgentCharter] = None
+    skill_contracts: list[SkillContract] = Field(default_factory=list)
+    benchmark_passed: bool = False
+    adversarial_tests_passed: bool = False
+    cost_latency_reliability: dict[str, Any] = Field(default_factory=dict)
+    shadow_winner: bool = False
+    canary_passed: bool = False
+    status: str = "PROPOSED"  # PROPOSED, REVIEWED, BENCHMARKED, SHADOW, CANARY, PROMOTED, ROLLED_BACK, RETIRED
+
+
+class ShadowChallenge(BaseModel):
+    challenge_id: str
+    incumbent_id: str
+    challenger_id: str
+    benchmark_id: str
+    metric: str
+    incumbent_score: float
+    challenger_score: float
+    baseline_score: float
+    winner: str  # incumbent, challenger, baseline, none
+    status: str = "RUNNING"  # RUNNING, CHALLENGER_WINS, INCUMBENT_WINS, TIE
+
+
+class CanaryRun(BaseModel):
+    run_id: str
+    agent_id: str
+    previous_version: Optional[str] = None
+    scope: str
+    start_time: datetime
+    end_time: Optional[datetime] = None
+    acceptance_criteria: dict[str, Any] = Field(default_factory=dict)
+    metrics: dict[str, Any] = Field(default_factory=dict)
+    status: str = "RUNNING"  # RUNNING, PASSED, FAILED
+
+
+class RollbackRecord(BaseModel):
+    rollback_id: str
+    agent_id: str
+    triggered_at: datetime
+    reason: str
+    previous_version: str
+    new_version: str
+    details: dict[str, Any] = Field(default_factory=dict)
+
+
+class PromotionDecision(BaseModel):
+    decision_id: str
+    agent_id: str
+    new_version: str
+    previous_version: Optional[str] = None
+    approved_by: list[str] = Field(default_factory=list)
+    status: str = "PENDING"  # PENDING, APPROVED, DENIED

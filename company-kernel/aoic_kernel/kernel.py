@@ -18,6 +18,9 @@ from aoic_kernel.decision_engine import DecisionEngine
 from aoic_kernel.publication_gate import PublicationGate
 from aoic_kernel.daily_briefing import DailyBriefing, HumanAttentionScore
 from aoic_kernel.opportunity_engine import OpportunityEngine
+from aoic_kernel.shadow_challenger import ShadowChallenger
+from aoic_kernel.canary_rollback import CanaryRollback
+from aoic_kernel.agent_lifecycle import AgentLifecycle
 
 
 class CompanyKernel:
@@ -49,3 +52,11 @@ class CompanyKernel:
         self.attention = HumanAttentionScore()
         self.briefing = DailyBriefing(self.attention)
         self.opportunity = OpportunityEngine()
+        self.shadow = ShadowChallenger(self.evals)
+        self.canary = CanaryRollback()
+        self.agent_lifecycle = AgentLifecycle(
+            agent_registry=self.agents,
+            skill_registry=self.skills,
+            shadow_challenger=self.shadow,
+            canary_rollback=self.canary,
+        )
