@@ -34,6 +34,9 @@ from aoic_kernel.enterprise_audit import EnterpriseAuditor
 from aoic_kernel.red_team import RedTeam
 from aoic_kernel.b2b_gate import B2BGate
 from aoic_kernel.maturity_evaluator import MaturityEvaluator
+from aoic_kernel.source_adapter import SourceAdapter
+from aoic_kernel.vendor_register import VendorRegister
+from aoic_kernel.model_gateway import ModelGateway
 
 
 class CompanyKernel:
@@ -93,3 +96,6 @@ class CompanyKernel:
         self.red_team = RedTeam()
         self.b2b_gate = B2BGate()
         self.maturity = MaturityEvaluator()
+        self.source_adapter = SourceAdapter()
+        self.vendor_register = VendorRegister()
+        self.model_gateway = ModelGateway()

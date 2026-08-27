@@ -57,8 +57,8 @@ class ValueEstimate(BaseModel):
 
 
 class CostEstimate(BaseModel):
-    one_off: Optional[float]
-    monthly: Optional[float]
+    one_off: Optional[float] = None
+    monthly: Optional[float] = None
     unit: str = "EUR"
 
 
@@ -738,3 +738,65 @@ class B2BProductGate(BaseModel):
     v1_proof_evidence: list[str] = Field(default_factory=list)
     approved_by: Optional[str] = None
     approved_at: Optional[datetime] = None
+
+
+class ConnectorStatus(str, Enum):
+    ACTIVE = "ACTIVE"
+    DEGRADED = "DEGRADED"
+    DISABLED = "DISABLED"
+
+
+class SourceConnector(BaseModel):
+    connector_id: str
+    name: str
+    vendor: str
+    purpose: str
+    auth_type: str
+    rate_limit: str
+    rights: str
+    provenance: str
+    pit_semantics: str
+    quality_checks: list[str] = Field(default_factory=list)
+    cost: CostEstimate
+    fallback_connector: Optional[str] = None
+    status: ConnectorStatus = ConnectorStatus.ACTIVE
+    registered_at: datetime
+
+
+class VendorStatus(str, Enum):
+    ACTIVE = "ACTIVE"
+    UNDER_REVIEW = "UNDER_REVIEW"
+    EXPIRING = "EXPIRING"
+    EXITED = "EXITED"
+
+
+class Vendor(BaseModel):
+    vendor_id: str
+    name: str
+    purpose: str
+    owner: str
+    spend: float = 0.0
+    renewal_date: Optional[datetime] = None
+    alternatives: list[str] = Field(default_factory=list)
+    data_classification: str = "internal"
+    subprocessors: list[str] = Field(default_factory=list)
+    sla: str = ""
+    exit_plan: str = ""
+    rights: str = ""
+    status: VendorStatus = VendorStatus.ACTIVE
+    registered_at: datetime
+
+
+class ModelProviderStatus(str, Enum):
+    ACTIVE = "ACTIVE"
+    KILLED = "KILLED"
+
+
+class ModelProvider(BaseModel):
+    provider_id: str
+    name: str
+    model_family: str
+    cost_per_1k_tokens: float
+    status: ModelProviderStatus = ModelProviderStatus.ACTIVE
+    max_rpm: int = 60
+    registered_at: datetime
