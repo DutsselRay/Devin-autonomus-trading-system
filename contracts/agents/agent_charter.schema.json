@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aoic.local/contracts/agents/agent_charter.schema.json",
+  "title": "AgentCharter",
+  "description": "Machine-readable charter for an AOIC agent version.",
+  "type": "object",
+  "required": [
+    "agent_id",
+    "version",
+    "owner",
+    "mission",
+    "objectives",
+    "non_goals",
+    "inputs",
+    "outputs",
+    "tools",
+    "data_scopes",
+    "authority_level",
+    "budgets",
+    "policies",
+    "escalation_rules",
+    "evaluations",
+    "stop_conditions",
+    "rollback",
+    "memory_policy",
+    "expiry"
+  ],
+  "properties": {
+    "agent_id": { "type": "string", "pattern": "^[a-z0-9_-]+$" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "owner": { "type": "string" },
+    "mission": { "type": "string", "minLength": 10 },
+    "objectives": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "non_goals": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "inputs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "outputs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "tools": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "data_scopes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "authority_level": { "enum": ["A0", "A1", "A2", "A3", "A4", "A5"] },
+    "budgets": {
+      "type": "object",
+      "required": ["money", "tokens", "time_seconds"],
+      "properties": {
+        "money": { "type": "number" },
+        "tokens": { "type": "integer" },
+        "time_seconds": { "type": "integer" }
+      }
+    },
+    "policies": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "escalation_rules": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "evaluations": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "stop_conditions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "rollback": { "type": "string" },
+    "memory_policy": { "type": "string" },
+    "expiry": { "type": "string", "format": "date-time" },
+    "status": { "enum": ["DRAFT", "ACTIVE", "CANARY", "RETIRED"] }
+  }
+}

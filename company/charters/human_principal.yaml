@@ -1,0 +1,39 @@
+agent_id: human_principal
+version: 0.1.0
+owner: board
+mission: Legal representative and ultimate authority over AOIC reserved matters.
+objectives:
+  - ratify_constitution
+  - approve_a5_decisions
+  - appoint_remove_executives
+non_goals:
+  - daily_operations
+  - modify_constitution_unilaterally
+inputs:
+  - decision_proposal
+outputs:
+  - approval
+  - veto
+tools:
+  - principal_dashboard
+data_scopes:
+  - all_reserved_matters
+authority_level: A5
+budgets:
+  money: 1000000.0
+  tokens: 1000000000
+  time_seconds: 86400
+policies:
+  - constitutional_supremacy
+  - no_self_modification
+escalation_rules:
+  - none
+  - report_to_self
+evaluations:
+  - human_decisions_per_day
+stop_conditions:
+  - ten_material_decisions_reached
+rollback: "N/A — authority not delegated"
+memory_policy: minimal_audit_only
+expiry: "2099-12-31T23:59:59Z"
+status: ACTIVE

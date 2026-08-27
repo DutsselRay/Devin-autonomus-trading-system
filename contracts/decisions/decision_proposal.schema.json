@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aoic.local/contracts/decisions/decision_proposal.schema.json",
+  "title": "DecisionProposal",
+  "description": "Canonical decision proposal artifact used by all agents.",
+  "type": "object",
+  "required": [
+    "decision_id",
+    "schema_version",
+    "proposer",
+    "objective",
+    "problem",
+    "recommendation",
+    "alternatives",
+    "evidence",
+    "expected_value",
+    "cost",
+    "reversibility",
+    "regulatory_risk",
+    "required_authority",
+    "rollback_plan",
+    "status"
+  ],
+  "properties": {
+    "decision_id": {
+      "type": "string",
+      "pattern": "^DEC-[0-9]{6}$"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "proposer": {
+      "type": "string",
+      "pattern": "^[a-z0-9_-]+@[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "objective": { "type": "string" },
+    "problem": { "type": "string" },
+    "recommendation": { "type": "string" },
+    "alternatives": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["evidence_id", "as_of", "source", "hash"],
+        "properties": {
+          "evidence_id": { "type": "string" },
+          "as_of": { "type": "string", "format": "date-time" },
+          "source": { "type": "string" },
+          "hash": { "type": "string" }
+        }
+      }
+    },
+    "expected_value": {
+      "type": "object",
+      "required": ["low", "base", "high", "unit"],
+      "properties": {
+        "low": { "type": ["number", "null"] },
+        "base": { "type": ["number", "null"] },
+        "high": { "type": ["number", "null"] },
+        "unit": { "type": "string" }
+      }
+    },
+    "cost": {
+      "type": "object",
+      "required": ["one_off", "monthly", "unit"],
+      "properties": {
+        "one_off": { "type": ["number", "null"] },
+        "monthly": { "type": ["number", "null"] },
+        "unit": { "type": "string" }
+      }
+    },
+    "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+    "reversibility": { "enum": ["HIGH", "MEDIUM", "LOW", "NONE"] },
+    "regulatory_risk": { "enum": ["LOW", "MEDIUM", "HIGH", "UNKNOWN"] },
+    "customer_impact": { "type": "string" },
+    "strategic_impact": { "type": "string" },
+    "urgency": { "type": "string" },
+    "dissent": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["agent_id", "objection"],
+        "properties": {
+          "agent_id": { "type": "string" },
+          "objection": { "type": "string" }
+        }
+      }
+    },
+    "required_authority": { "enum": ["A0", "A1", "A2", "A3", "A4", "A5"] },
+    "rollback_plan": { "type": "string" },
+    "deadline": { "type": ["string", "null"], "format": "date-time" },
+    "expires_at": { "type": ["string", "null"], "format": "date-time" },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "VALIDATED",
+        "CHALLENGED",
+        "APPROVED",
+        "REJECTED",
+        "DEFERRED",
+        "EXECUTING",
+        "VERIFIED",
+        "ROLLED_BACK",
+        "CLOSED"
+      ]
+    },
+    "approved_by": { "type": ["string", "null"] },
+    "approved_at": { "type": ["string", "null"], "format": "date-time" },
+    "executed_at": { "type": ["string", "null"], "format": "date-time" },
+    "idempotency_key": { "type": ["string", "null"] }
+  }
+}

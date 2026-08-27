@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Secrets and data
+.env
+*.pem
+*.key
+secrets/
+raw_data/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Build artifacts
+build/
+dist/
+*.whl

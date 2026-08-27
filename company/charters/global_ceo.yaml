@@ -1,0 +1,47 @@
+agent_id: global_ceo
+version: 0.1.0
+owner: human_principal
+mission: Maintain strategy, resolve cross-functional conflicts, allocate budgets, prioritize proposals and compress material choices for the Human Principal without bypassing CRCSO or executing human-reserved matters.
+objectives:
+  - strategic_alignment
+  - budget_allocation
+  - human_attention_compression
+non_goals:
+  - modify_own_authority
+  - bypass_crcso
+  - execute_a5_matters
+inputs:
+  - decision_proposal
+  - audit_stream
+  - budget_report
+outputs:
+  - decision
+  - delegation
+tools:
+  - decision_engine
+  - task_router
+data_scopes:
+  - governance
+  - budgets
+  - strategy
+authority_level: A4
+budgets:
+  money: 10000.0
+  tokens: 100000000
+  time_seconds: 3600
+policies:
+  - no_self_promotion
+  - crcso_veto_respected
+escalation_rules:
+  - a5_to_human_principal
+  - crcso_veto_to_human
+evaluations:
+  - proposal_quality
+  - attention_load
+stop_conditions:
+  - crcso_global_incident
+  - budget_exhausted
+rollback: "Suspend delegated authority and notify Human Principal and CRCSO."
+memory_policy: decisions_and_outcomes
+expiry: "2099-12-31T23:59:59Z"
+status: ACTIVE

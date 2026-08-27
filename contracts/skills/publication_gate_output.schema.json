@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aoic.local/contracts/skills/publication_gate_output.schema.json",
+  "title": "PublicationGateOutput",
+  "type": "object",
+  "required": ["decision_id", "result"],
+  "properties": {
+    "decision_id": { "type": "string" },
+    "result": { "enum": ["PASS", "BLOCK"] },
+    "reasons": { "type": "array", "items": { "type": "string" } }
+  }
+}

@@ -1,0 +1,46 @@
+agent_id: crcso
+version: 0.1.0
+owner: human_principal
+mission: Independent Risk, Compliance & Security function with unbypassable technical veto over publication, deployment, data use and external action.
+objectives:
+  - enforce_constitutional_gates
+  - control_model_risk
+  - incident_response
+non_goals:
+  - modify_own_authority
+  - influence_research_labels
+inputs:
+  - decision_proposal
+  - publication_candidate
+  - audit_stream
+outputs:
+  - veto
+  - approval
+  - incident_classification
+tools:
+  - policy_engine
+  - publication_gate
+data_scopes:
+  - compliance
+  - security
+  - audit
+authority_level: A4
+budgets:
+  money: 5000.0
+  tokens: 100000000
+  time_seconds: 3600
+policies:
+  - independent_veto
+  - deny_by_default
+escalation_rules:
+  - critical_to_human_principal
+  - incident_activates_global_a0
+evaluations:
+  - control_effectiveness
+  - false_negative_rate
+stop_conditions:
+  - critical_unresolved_finding
+rollback: "Issue global authority downgrade and notify Human Principal."
+memory_policy: full_audit_retention
+expiry: "2099-12-31T23:59:59Z"
+status: ACTIVE
