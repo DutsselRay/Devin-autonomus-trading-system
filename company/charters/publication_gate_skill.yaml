@@ -1,0 +1,28 @@
+skill_id: publication_gate
+version: 0.1.0
+purpose: Evaluate a research candidate against the publication gate and block or pass it.
+preconditions:
+  - decision_proposal_provided
+  - evidence_pit_records_provided
+input_schema: "https://aoic.local/contracts/decisions/decision_proposal.schema.json"
+output_schema: "https://aoic.local/contracts/skills/publication_gate_output.schema.json"
+side_effects:
+  - audit_log_entry
+required_permissions:
+  - read_decision
+  - write_audit
+cost_model: "0.01 EUR per evaluation"
+latency_slo: "p95 < 100ms"
+failure_modes:
+  - gate_blocked
+  - pit_violation
+evidence_requirements:
+  - complete_pit_lineage
+  - source_rights_matrix
+tests:
+  - test_probability_gate
+  - test_source_rights
+  - test_pit_validation
+security_classification: internal
+idempotency: keyed
+status: APPROVED

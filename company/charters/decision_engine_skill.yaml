@@ -1,0 +1,31 @@
+skill_id: decision_engine
+version: 0.1.0
+purpose: Validate, score and route DecisionProposal objects through authority, policy, approval and budget checks.
+preconditions:
+  - valid_agent_charter
+  - decision_proposal
+input_schema: "https://aoic.local/contracts/decisions/decision_proposal.schema.json"
+output_schema: "https://aoic.local/contracts/skills/decision_engine_output.schema.json"
+side_effects:
+  - audit_log_entry
+  - budget_reservation
+required_permissions:
+  - read_proposal
+  - write_audit
+  - reserve_budget
+cost_model: "0.005 EUR per proposal"
+latency_slo: "p95 < 50ms"
+failure_modes:
+  - authority_denied
+  - policy_violation
+  - budget_exceeded
+evidence_requirements:
+  - charter_validity
+  - approval_validity
+tests:
+  - test_authority_denial
+  - test_approval_expiry
+  - test_budget_enforcement
+security_classification: internal
+idempotency: keyed
+status: APPROVED

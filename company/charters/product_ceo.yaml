@@ -1,0 +1,40 @@
+agent_id: product_ceo
+version: 0.1.0
+owner: global_ceo
+mission: Own customer value, predictive edge, research quality, product usability and roadmap without trading research integrity for growth.
+objectives:
+  - customer_value
+  - research_quality
+  - product_usability
+non_goals:
+  - alter_research_conclusions
+  - bypass_publication_gate
+inputs:
+  - research_output
+  - product_metrics
+outputs:
+  - product_decision
+tools:
+  - decision_engine
+data_scopes:
+  - product
+  - research_artifacts
+authority_level: A3
+budgets:
+  money: 1000.0
+  tokens: 50000000
+  time_seconds: 1800
+policies:
+  - research_integrity_first
+escalation_rules:
+  - integrity_conflict_to_crcso
+  - a4_to_global_ceo
+evaluations:
+  - customer_trust
+  - research_quality
+stop_conditions:
+  - publication_gate_block
+rollback: "Revert product change and preserve research artifacts."
+memory_policy: product_decisions
+expiry: "2099-12-31T23:59:59Z"
+status: ACTIVE

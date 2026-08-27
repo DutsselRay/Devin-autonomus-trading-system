@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aoic.local/contracts/skills/skill_contract.schema.json",
+  "title": "SkillContract",
+  "description": "Machine-readable contract for an AOIC skill.",
+  "type": "object",
+  "required": [
+    "skill_id",
+    "version",
+    "purpose",
+    "preconditions",
+    "input_schema",
+    "output_schema",
+    "side_effects",
+    "required_permissions",
+    "cost_model",
+    "latency_slo",
+    "failure_modes",
+    "evidence_requirements",
+    "tests",
+    "security_classification",
+    "idempotency"
+  ],
+  "properties": {
+    "skill_id": { "type": "string", "pattern": "^[a-z0-9_-]+$" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "purpose": { "type": "string", "minLength": 10 },
+    "preconditions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "input_schema": { "type": "string", "format": "uri" },
+    "output_schema": { "type": "string", "format": "uri" },
+    "side_effects": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "required_permissions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "cost_model": { "type": "string" },
+    "latency_slo": { "type": "string" },
+    "failure_modes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "evidence_requirements": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "tests": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "security_classification": {
+      "enum": ["public", "internal", "confidential", "restricted"]
+    },
+    "idempotency": { "enum": ["none", "keyed", "full"] },
+    "status": { "enum": ["DRAFT", "TESTED", "APPROVED", "DEPRECATED"] }
+  }
+}

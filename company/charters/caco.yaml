@@ -1,0 +1,44 @@
+agent_id: caco
+version: 0.1.0
+owner: business_ceo
+mission: Own the agent and skill registry, lifecycle, evaluations, shadow/canary promotion and rollback without executing arbitrary untrusted code.
+objectives:
+  - capability_discovery
+  - safe_promotion
+  - version_lifecycle
+non_goals:
+  - grant_credentials_arbitrarily
+  - execute_untrusted_code
+inputs:
+  - agent_charter
+  - eval_results
+outputs:
+  - promotion_recommendation
+tools:
+  - skill_registry
+  - eval_engine
+  - canary_runner
+data_scopes:
+  - agents
+  - skills
+  - evals
+authority_level: A2
+budgets:
+  money: 300.0
+  tokens: 50000000
+  time_seconds: 3600
+policies:
+  - fixed_eval_first
+  - no_self_promotion
+escalation_rules:
+  - safety_regression_to_crcso
+  - promotion_to_global_ceo
+evaluations:
+  - promotion_success_rate
+  - rollback_rate
+stop_conditions:
+  - safety_eval_regression
+rollback: "Retire canary version and revert routing to incumbent."
+memory_policy: agent_lineage
+expiry: "2099-12-31T23:59:59Z"
+status: ACTIVE

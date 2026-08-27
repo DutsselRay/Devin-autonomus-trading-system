@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aoic.local/contracts/events/pit_record.schema.json",
+  "title": "PointInTimeRecord",
+  "description": "A bitemporal market-relevant fact.",
+  "type": "object",
+  "required": [
+    "record_id",
+    "entity_id",
+    "event_time",
+    "released_at",
+    "observed_at",
+    "ingested_at",
+    "valid_from",
+    "source",
+    "data"
+  ],
+  "properties": {
+    "record_id": { "type": "string" },
+    "entity_id": { "type": "string" },
+    "event_time": { "type": "string", "format": "date-time" },
+    "released_at": { "type": "string", "format": "date-time" },
+    "observed_at": { "type": "string", "format": "date-time" },
+    "ingested_at": { "type": "string", "format": "date-time" },
+    "valid_from": { "type": "string", "format": "date-time" },
+    "valid_to": { "type": ["string", "null"], "format": "date-time" },
+    "source": { "type": "string" },
+    "source_version": { "type": ["string", "null"] },
+    "content_hash": { "type": ["string", "null"] },
+    "data": { "type": "object" }
+  }
+}

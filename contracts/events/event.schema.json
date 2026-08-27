@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aoic.local/contracts/events/event.schema.json",
+  "title": "AOICEvent",
+  "description": "Typed durable event on the Company Kernel event bus.",
+  "type": "object",
+  "required": [
+    "event_id",
+    "event_type",
+    "timestamp",
+    "source",
+    "payload"
+  ],
+  "properties": {
+    "event_id": { "type": "string" },
+    "event_type": { "type": "string" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "source": { "type": "string" },
+    "payload": { "type": "object" },
+    "causality": {
+      "type": "object",
+      "properties": {
+        "correlation_id": { "type": "string" },
+        "parent_event_id": { "type": ["string", "null"] },
+        "decision_id": { "type": ["string", "null"] }
+      }
+    },
+    "signature": { "type": ["string", "null"] }
+  }
+}
