@@ -28,6 +28,11 @@ from aoic_kernel.commercial_readiness import CommercialReadiness
 from aoic_kernel.public_track_record import PublicTrackRecord
 from aoic_kernel.billing_support import BillingSupport
 from aoic_kernel.a5_launch import A5Launch, CustomerWeb
+from aoic_kernel.cmo_growth import CMOGrowth
+from aoic_kernel.procurement import Procurement
+from aoic_kernel.enterprise_audit import EnterpriseAuditor
+from aoic_kernel.red_team import RedTeam
+from aoic_kernel.b2b_gate import B2BGate
 
 
 class CompanyKernel:
@@ -81,3 +86,8 @@ class CompanyKernel:
         self.billing_support = BillingSupport()
         self.a5_launch = A5Launch(self.commercial_readiness)
         self.customer_web = CustomerWeb(self.public_track_record)
+        self.cmo_growth = CMOGrowth()
+        self.procurement = Procurement()
+        self.enterprise_audit = EnterpriseAuditor()
+        self.red_team = RedTeam()
+        self.b2b_gate = B2BGate()

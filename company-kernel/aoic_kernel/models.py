@@ -634,3 +634,84 @@ class LaunchDecision(BaseModel):
     approved_at: Optional[datetime] = None
     gates: list[str] = Field(default_factory=list)
     rationale: str = ""
+
+
+class CampaignStatus(str, Enum):
+    DRAFT = "DRAFT"
+    REVIEWED = "REVIEWED"
+    RUNNING = "RUNNING"
+    PAUSED = "PAUSED"
+    COMPLETED = "COMPLETED"
+
+
+class GrowthCampaign(BaseModel):
+    campaign_id: str
+    name: str
+    channel: str
+    status: CampaignStatus = CampaignStatus.DRAFT
+    audience: str
+    budget: float
+    start_date: datetime
+    end_date: Optional[datetime] = None
+    leads: list[str] = Field(default_factory=list)
+    evidence: list[str] = Field(default_factory=list)
+    created_at: datetime
+
+
+class ProcurementStatus(str, Enum):
+    DRAFT = "DRAFT"
+    VENDOR_REVIEW = "VENDOR_REVIEW"
+    SECURITY_REVIEW = "SECURITY_REVIEW"
+    APPROVED = "APPROVED"
+    REJECTED = "REJECTED"
+    EXECUTED = "EXECUTED"
+
+
+class ProcurementRequest(BaseModel):
+    request_id: str
+    vendor_name: str
+    purpose: str
+    amount: float
+    recurring: bool = False
+    status: ProcurementStatus = ProcurementStatus.DRAFT
+    requested_by: str
+    evidence: list[str] = Field(default_factory=list)
+    created_at: datetime
+    approved_by: list[str] = Field(default_factory=list)
+
+
+class AuditFinding(BaseModel):
+    finding_id: str
+    scope: str
+    severity: RiskLevel
+    description: str
+    evidence: list[str] = Field(default_factory=list)
+    auditor: str
+    reported_at: datetime
+    status: str = "OPEN"  # OPEN, ACCEPTED, REMEDIATED, DISPUTED
+
+
+class RedTeamExercise(BaseModel):
+    exercise_id: str
+    target_system: str
+    objective: str
+    team: list[str] = Field(default_factory=list)
+    findings: list[str] = Field(default_factory=list)
+    status: str = "PLANNED"  # PLANNED, RUNNING, COMPLETED
+    started_at: Optional[datetime] = None
+    completed_at: Optional[datetime] = None
+
+
+class B2BProductGateStatus(str, Enum):
+    BLOCKED = "BLOCKED"
+    V1_PROOF = "V1_PROOF"
+    APPROVED = "APPROVED"
+
+
+class B2BProductGate(BaseModel):
+    product_id: str
+    name: str
+    status: B2BProductGateStatus = B2BProductGateStatus.BLOCKED
+    v1_proof_evidence: list[str] = Field(default_factory=list)
+    approved_by: Optional[str] = None
+    approved_at: Optional[datetime] = None
