@@ -4,10 +4,15 @@ from datetime import datetime
 from typing import Any
 
 from aoic_kernel.backtester import Backtester
+from aoic_kernel.calibration import CalibrationEngine
 from aoic_kernel.entity_master import EntityMaster
 from aoic_kernel.experiment_registry import ExperimentRegistry
 from aoic_kernel.feature_store import TemporalFeatureStore
 from aoic_kernel.oosset import SealedOOSSetManager
+from aoic_kernel.outcome_engine import OutcomeEngine
+from aoic_kernel.pattern_engine import PatternEngine
+from aoic_kernel.research_engine import ResearchEngine
+from aoic_kernel.research_publication_gate import ResearchPublicationGate
 from aoic_kernel.universe import SurvivorshipAwareUniverse
 
 
@@ -24,6 +29,11 @@ class OpportunityEngine:
         self.oos_manager = SealedOOSSetManager()
         self.experiments = ExperimentRegistry(oos_manager=self.oos_manager)
         self.backtester = Backtester(self.feature_store)
+        self.patterns = PatternEngine()
+        self.research = ResearchEngine(self.patterns, self.feature_store)
+        self.calibration = CalibrationEngine()
+        self.publication = ResearchPublicationGate(self.calibration)
+        self.outcomes = OutcomeEngine()
 
     def ingest_feature(self, record: Any) -> None:
         self.feature_store.store(record)

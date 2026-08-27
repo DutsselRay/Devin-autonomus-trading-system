@@ -330,3 +330,111 @@ class BacktestRun(BaseModel):
         if self.start_value == 0:
             return 0.0
         return (self.end_value - self.costs) / self.start_value - 1.0
+
+
+class PatternStatus(str, Enum):
+    IDEA = "IDEA"
+    DISCOVERED = "DISCOVERED"
+    REPLICATED = "REPLICATED"
+    SEALED_OOS = "SEALED_OOS"
+    SHADOW_LIVE = "SHADOW_LIVE"
+    ELIGIBLE = "ELIGIBLE"
+    RETIRED = "RETIRED"
+
+
+class Pattern(BaseModel):
+    pattern_id: str = Field(pattern=r"^PAT-[0-9]{6}$")
+    name: str
+    version: str = Field(pattern=r"^[0-9]+\.[0-9]+\.[0-9]+$")
+    eligible_universe: list[str]
+    regime: str
+    feature_predicate: str
+    economic_rationale: str
+    prediction: str
+    horizon: str
+    success_label: str
+    discovery_samples: list[str] = Field(default_factory=list)
+    validation_samples: list[str] = Field(default_factory=list)
+    confounders: list[str] = Field(default_factory=list)
+    failure_modes: list[str] = Field(default_factory=list)
+    effect_size: Optional[float] = None
+    uncertainty: Optional[float] = None
+    capacity: Optional[float] = None
+    transaction_costs: float = 0.0
+    liquidity_assumptions: str = ""
+    parent_pattern_id: Optional[str] = None
+    child_pattern_ids: list[str] = Field(default_factory=list)
+    experiment_ids: list[str] = Field(default_factory=list)
+    status: PatternStatus = PatternStatus.IDEA
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class CommitteeRole(str, Enum):
+    BULL = "BULL"
+    BEAR = "BEAR"
+    RISK = "RISK"
+    VALUATION = "VALUATION"
+    EVIDENCE = "EVIDENCE"
+    JUDGE = "JUDGE"
+
+
+class CommitteeReview(BaseModel):
+    review_id: str
+    pattern_id: str
+    role: CommitteeRole
+    reviewer: str
+    score: float = Field(ge=-1, le=1)
+    dissent: Optional[str] = None
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class ResearchOpportunity(BaseModel):
+    opportunity_id: str
+    entity_id: str
+    pattern_id: str
+    as_of: datetime
+    probability: float = Field(ge=0, le=1)
+    expected_return: Optional[float] = None
+    downside: Optional[float] = None
+    invalidation_conditions: list[str] = Field(default_factory=list)
+    regime: str
+    status: str = "CANDIDATE"  # CANDIDATE, TRIAGED, DEEP_RESEARCH, COMMITTEE_REVIEW, PUBLISHED, ABSTAINED
+    committee_reviews: list[CommitteeReview] = Field(default_factory=list)
+    calibration_score: Optional[float] = None
+    sample_size: Optional[int] = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class CalibrationRun(BaseModel):
+    calibration_id: str
+    model_version: str
+    fitted_at: datetime
+    scores: list[tuple[float, float]] = Field(default_factory=list)  # (prediction, outcome)
+    brier_score: Optional[float] = None
+    expected_calibration_error: Optional[float] = None
+    log_loss: Optional[float] = None
+    bucket_metrics: dict[str, Any] = Field(default_factory=dict)
+    status: str = "VALID"  # VALID, DRIFT, INSUFFICIENT
+
+
+class Outcome(BaseModel):
+    outcome_id: str
+    prediction_id: Optional[str] = None
+    entity_id: str
+    as_of: datetime
+    horizon: str
+    observed_at: datetime
+    actual_return: Optional[float] = None
+    hit: Optional[bool] = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class DurableLearning(BaseModel):
+    learning_id: str
+    pattern_id: Optional[str] = None
+    experiment_id: Optional[str] = None
+    hypothesis: str
+    evidence: list[str] = Field(default_factory=list)
+    effective_sample_size: int = 0
+    validated_by: list[str] = Field(default_factory=list)
+    status: str = "PROPOSED"  # PROPOSED, REPLICATED, APPROVED, RETIRED
