@@ -502,3 +502,74 @@ class PromotionDecision(BaseModel):
     previous_version: Optional[str] = None
     approved_by: list[str] = Field(default_factory=list)
     status: str = "PENDING"  # PENDING, APPROVED, DENIED
+
+
+class Severity(str, Enum):
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    CRITICAL = "CRITICAL"
+
+
+class IncidentStatus(str, Enum):
+    DETECTED = "DETECTED"
+    CLASSIFIED = "CLASSIFIED"
+    CONTAINED = "CONTAINED"
+    EVIDENCE_PRESERVED = "EVIDENCE_PRESERVED"
+    NOTIFIED = "NOTIFIED"
+    RECOVERING = "RECOVERING"
+    VERIFIED = "VERIFIED"
+    POSTMORTEM = "POSTMORTEM"
+    REMEDIATED = "REMEDIATED"
+    CLOSED = "CLOSED"
+
+
+class Incident(BaseModel):
+    incident_id: str
+    title: str
+    description: str
+    severity: Severity
+    status: IncidentStatus = IncidentStatus.DETECTED
+    detected_at: datetime
+    contained_at: Optional[datetime] = None
+    recovered_at: Optional[datetime] = None
+    verified_at: Optional[datetime] = None
+    postmortem_at: Optional[datetime] = None
+    remediated_at: Optional[datetime] = None
+    closed_at: Optional[datetime] = None
+    evidence: list[str] = Field(default_factory=list)
+    notifications: list[str] = Field(default_factory=list)
+    postmortem_report: Optional[str] = None
+    remediation_plan: Optional[str] = None
+
+
+class LivePredictionStatus(str, Enum):
+    SEALED = "SEALED"
+    RELEASED = "RELEASED"
+    RESOLVED = "RESOLVED"
+
+
+class LivePrediction(BaseModel):
+    prediction_id: str
+    entity_id: str
+    feature_name: str
+    horizon: timedelta
+    predicted_value: Any
+    probability: float = Field(ge=0.0, le=1.0)
+    evidence: list[str] = Field(default_factory=list)
+    created_at: datetime
+    release_at: datetime
+    released_at: Optional[datetime] = None
+    resolved_at: Optional[datetime] = None
+    actual_value: Optional[Any] = None
+    status: LivePredictionStatus = LivePredictionStatus.SEALED
+    audit_log_id: Optional[str] = None
+
+
+class DashboardSnapshot(BaseModel):
+    snapshot_at: datetime
+    pending_decisions: list[DecisionProposal] = Field(default_factory=list)
+    released_predictions: list[LivePrediction] = Field(default_factory=list)
+    active_incidents: list[Incident] = Field(default_factory=list)
+    attention_score: dict[str, Any] = Field(default_factory=dict)
+    audit_summary: dict[str, int] = Field(default_factory=dict)

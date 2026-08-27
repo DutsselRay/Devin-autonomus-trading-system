@@ -21,6 +21,9 @@ from aoic_kernel.opportunity_engine import OpportunityEngine
 from aoic_kernel.shadow_challenger import ShadowChallenger
 from aoic_kernel.canary_rollback import CanaryRollback
 from aoic_kernel.agent_lifecycle import AgentLifecycle
+from aoic_kernel.live_prediction import LivePredictionRegistry
+from aoic_kernel.incident_engine import IncidentEngine
+from aoic_kernel.dashboard import InternalDashboard, AuditView
 
 
 class CompanyKernel:
@@ -60,3 +63,12 @@ class CompanyKernel:
             shadow_challenger=self.shadow,
             canary_rollback=self.canary,
         )
+        self.live_predictions = LivePredictionRegistry()
+        self.incidents = IncidentEngine()
+        self.dashboard = InternalDashboard(
+            audit=self.audit,
+            attention=self.attention,
+            live_predictions=self.live_predictions,
+            incidents=self.incidents,
+        )
+        self.audit_view = AuditView(self.audit)
