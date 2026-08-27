@@ -3,9 +3,14 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
-from pathlib import Path
-import pytest
 
+import pytest
+from aoic_kernel.exceptions import (
+    ApprovalExpired,
+    AuthorityDenied,
+    BudgetExceeded,
+    PublicationGateBlocked,
+)
 from aoic_kernel.kernel import CompanyKernel
 from aoic_kernel.memory_engine import MemoryEngine
 from aoic_kernel.models import (
@@ -16,15 +21,9 @@ from aoic_kernel.models import (
     Dissent,
     PITRecord,
     PolicyRule,
-    RiskLevel,
 )
-from aoic_kernel.exceptions import (
-    ApprovalExpired,
-    AuthorityDenied,
-    BudgetExceeded,
-    PublicationGateBlocked,
-)
-from tests.conftest import make_proposal, make_pit_record
+
+from tests.conftest import make_pit_record, make_proposal
 
 
 # 1. A CEO attempt to raise its own authority is denied and audited.
@@ -260,9 +259,7 @@ def test_dissent_survives_in_proposal(kernel: CompanyKernel, global_ceo: AgentCh
         proposer="global_ceo@0.1.0",
         required_authority=Authority.A4,
     )
-    proposal.dissent.append(
-        Dissent(agent_id="crcso", objection="Risk of regulatory overreach.")
-    )
+    proposal.dissent.append(Dissent(agent_id="crcso", objection="Risk of regulatory overreach."))
     kernel.decisions.submit(global_ceo, proposal)
     kernel.decisions.approve(human_principal, proposal, approval_id="APPROVE-10")
     assert any(d.agent_id == "crcso" for d in proposal.dissent)

@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from aoic_kernel.models import AgentCharter, Authority, DecisionProposal, PolicyRule, RiskLevel
 from aoic_kernel.exceptions import PolicyViolation
+from aoic_kernel.models import Authority, DecisionProposal, PolicyRule
 
 
 class PolicyEngine:
@@ -25,9 +25,7 @@ class PolicyEngine:
             if rule.effect == "ESCALATE":
                 # Escalation means required authority must be at least rule.authority_min
                 if _authority_lt(proposal.required_authority, rule.authority_min):
-                    raise PolicyViolation(
-                        f"Policy {rule.policy_id} requires authority {rule.authority_min}"
-                    )
+                    raise PolicyViolation(f"Policy {rule.policy_id} requires authority {rule.authority_min}")
 
     def _applies(self, rule: PolicyRule, proposal: DecisionProposal, context: dict[str, Any]) -> bool:
         return True  # Simplified: in production use policy condition DSL

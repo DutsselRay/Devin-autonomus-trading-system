@@ -35,10 +35,7 @@ class AuditView:
         if role == "public":
             entries = [e for e in entries if e.event_type in {"PUBLICATION", "DECISION_APPROVED", "DECISION_EXECUTED"}]
         elif role == "agent" and agent_id:
-            entries = [
-                e for e in entries
-                if e.actor == agent_id or e.target == agent_id or e.event_type in {"PUBLICATION"}
-            ]
+            entries = [e for e in entries if e.actor == agent_id or e.target == agent_id or e.event_type in {"PUBLICATION"}]
         if event_type:
             entries = [e for e in entries if e.event_type == event_type]
         if start:

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import pytest
-
 from aoic_kernel.kernel import CompanyKernel
 from aoic_kernel.models import MaturityLevel
 

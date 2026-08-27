@@ -3,10 +3,8 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 
 import pytest
-
 from aoic_kernel.kernel import CompanyKernel
 from aoic_kernel.models import AgentCharter, Authority, CapabilityProposal, SkillContract
-
 
 FUTURE = datetime.now(timezone.utc) + timedelta(days=365)
 
@@ -117,9 +115,7 @@ def test_benchmark_requires_adversarial_pass():
     proposal = _proposal("analyst", "1.1.0")
     lifecycle = kernel.agent_lifecycle
     lifecycle.propose(proposal)
-    lifecycle.review_source_license(
-        proposal.proposal_id, source_reviewed=True, license_approved=True, security_reviewed=True
-    )
+    lifecycle.review_source_license(proposal.proposal_id, source_reviewed=True, license_approved=True, security_reviewed=True)
     lifecycle.run_benchmark(
         proposal.proposal_id,
         runner=lambda a, v: 1.0,
@@ -138,9 +134,7 @@ def test_shadow_challenger_wins_promotes_to_shadow():
     proposal = _proposal("analyst", "1.1.0")
     lifecycle = kernel.agent_lifecycle
     lifecycle.propose(proposal)
-    lifecycle.review_source_license(
-        proposal.proposal_id, source_reviewed=True, license_approved=True, security_reviewed=True
-    )
+    lifecycle.review_source_license(proposal.proposal_id, source_reviewed=True, license_approved=True, security_reviewed=True)
     lifecycle.run_benchmark(
         proposal.proposal_id,
         runner=lambda a, v: 1.0,
@@ -166,9 +160,7 @@ def test_shadow_challenger_loses_rolls_back():
     proposal = _proposal("analyst", "1.1.0")
     lifecycle = kernel.agent_lifecycle
     lifecycle.propose(proposal)
-    lifecycle.review_source_license(
-        proposal.proposal_id, source_reviewed=True, license_approved=True, security_reviewed=True
-    )
+    lifecycle.review_source_license(proposal.proposal_id, source_reviewed=True, license_approved=True, security_reviewed=True)
     lifecycle.run_benchmark(
         proposal.proposal_id,
         runner=lambda a, v: 1.0,
@@ -193,9 +185,7 @@ def test_canary_limited_scope_and_fails_rollback():
     proposal = _proposal("analyst", "1.1.0")
     lifecycle = kernel.agent_lifecycle
     lifecycle.propose(proposal)
-    lifecycle.review_source_license(
-        proposal.proposal_id, source_reviewed=True, license_approved=True, security_reviewed=True
-    )
+    lifecycle.review_source_license(proposal.proposal_id, source_reviewed=True, license_approved=True, security_reviewed=True)
     lifecycle.run_benchmark(
         proposal.proposal_id,
         runner=lambda a, v: 1.0,
@@ -230,9 +220,7 @@ def test_canary_passes_then_promote():
     lifecycle = kernel.agent_lifecycle
     charter = _charter("analyst", "1.1.0")
     lifecycle.propose(proposal)
-    lifecycle.review_source_license(
-        proposal.proposal_id, source_reviewed=True, license_approved=True, security_reviewed=True
-    )
+    lifecycle.review_source_license(proposal.proposal_id, source_reviewed=True, license_approved=True, security_reviewed=True)
     lifecycle.register_charter(proposal.proposal_id, charter, [_skill("analysis", "1.1.0")])
     lifecycle.run_benchmark(
         proposal.proposal_id,
@@ -269,9 +257,7 @@ def test_promotion_cannot_be_self_approved():
     lifecycle = kernel.agent_lifecycle
     charter = _charter("analyst", "1.1.0")
     lifecycle.propose(proposal)
-    lifecycle.review_source_license(
-        proposal.proposal_id, source_reviewed=True, license_approved=True, security_reviewed=True
-    )
+    lifecycle.review_source_license(proposal.proposal_id, source_reviewed=True, license_approved=True, security_reviewed=True)
     lifecycle.register_charter(proposal.proposal_id, charter, [_skill("analysis", "1.1.0")])
     lifecycle.run_benchmark(
         proposal.proposal_id,
@@ -307,9 +293,7 @@ def test_rollback_restores_previous_version():
     lifecycle = kernel.agent_lifecycle
     charter = _charter("analyst", "1.1.0")
     lifecycle.propose(proposal)
-    lifecycle.review_source_license(
-        proposal.proposal_id, source_reviewed=True, license_approved=True, security_reviewed=True
-    )
+    lifecycle.review_source_license(proposal.proposal_id, source_reviewed=True, license_approved=True, security_reviewed=True)
     lifecycle.register_charter(proposal.proposal_id, charter, [_skill("analysis", "1.1.0")])
     lifecycle.run_benchmark(
         proposal.proposal_id,
@@ -350,9 +334,7 @@ def test_promotion_registers_new_version_and_keeps_old_in_history():
     lifecycle = kernel.agent_lifecycle
     charter = _charter("analyst", "1.1.0")
     lifecycle.propose(proposal)
-    lifecycle.review_source_license(
-        proposal.proposal_id, source_reviewed=True, license_approved=True, security_reviewed=True
-    )
+    lifecycle.review_source_license(proposal.proposal_id, source_reviewed=True, license_approved=True, security_reviewed=True)
     lifecycle.register_charter(proposal.proposal_id, charter, [_skill("analysis", "1.1.0")])
     lifecycle.run_benchmark(
         proposal.proposal_id,

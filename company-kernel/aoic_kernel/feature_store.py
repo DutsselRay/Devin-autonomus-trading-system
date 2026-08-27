@@ -15,16 +15,10 @@ class TemporalFeatureStore:
     def store(self, record: FeatureRecord) -> None:
         self._records.append(record)
 
-    def get(
-        self, entity_id: str, feature_name: str, as_of: datetime
-    ) -> FeatureRecord | None:
+    def get(self, entity_id: str, feature_name: str, as_of: datetime) -> FeatureRecord | None:
         candidate: FeatureRecord | None = None
         for record in self._records:
-            if (
-                record.entity_id == entity_id
-                and record.feature_name == feature_name
-                and record.is_available_at(as_of)
-            ):
+            if record.entity_id == entity_id and record.feature_name == feature_name and record.is_available_at(as_of):
                 key = (record.valid_from, record.released_at, record.ingested_at)
                 if candidate is None or key > (
                     candidate.valid_from,

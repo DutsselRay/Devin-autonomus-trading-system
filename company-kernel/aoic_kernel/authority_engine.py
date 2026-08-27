@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from aoic_kernel.models import AgentCharter, Authority, DecisionProposal
 from aoic_kernel.exceptions import AuthorityDenied
-
+from aoic_kernel.models import AgentCharter, Authority, DecisionProposal
 
 _AUTHORITY_ORDER = ["A0", "A1", "A2", "A3", "A4", "A5"]
 
@@ -32,9 +31,7 @@ class AuthorityEngine:
             raise AuthorityDenied("Global risk state lowered to A0 during incident")
 
         if _AUTHORITY_ORDER.index(effective.value) < _AUTHORITY_ORDER.index(required.value):
-            raise AuthorityDenied(
-                f"Agent {charter.agent_id} has authority {effective} but {required} is required"
-            )
+            raise AuthorityDenied(f"Agent {charter.agent_id} has authority {effective} but {required} is required")
 
         return effective
 

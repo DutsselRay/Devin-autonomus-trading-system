@@ -3,7 +3,6 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 
 import pytest
-
 from aoic_kernel.exceptions import OOSAccessDenied
 from aoic_kernel.kernel import CompanyKernel
 from aoic_kernel.models import (
@@ -108,12 +107,8 @@ def test_entity_lifecycle(kernel: CompanyKernel) -> None:
 def test_pit_ingestion_reconstructs_as_of(kernel: CompanyKernel) -> None:
     entity = _entity("AAPL_US")
     kernel.opportunity.entity_master.register(entity)
-    kernel.opportunity.entity_master.ingest(
-        _pit_record("PIT-001", "AAPL_US", _day(0), 100.0)
-    )
-    kernel.opportunity.entity_master.ingest(
-        _pit_record("PIT-002", "AAPL_US", _day(2), 110.0)
-    )
+    kernel.opportunity.entity_master.ingest(_pit_record("PIT-001", "AAPL_US", _day(0), 100.0))
+    kernel.opportunity.entity_master.ingest(_pit_record("PIT-002", "AAPL_US", _day(2), 110.0))
 
     history = kernel.opportunity.entity_master.pit_history("AAPL_US", _day(1))
     assert len(history) == 1
@@ -125,15 +120,9 @@ def test_pit_ingestion_reconstructs_as_of(kernel: CompanyKernel) -> None:
 
 # 3. Feature store returns the latest value available as-of a date.
 def test_feature_store_as_of_returns_latest(kernel: CompanyKernel) -> None:
-    kernel.opportunity.feature_store.store(
-        _price("AAPL_US", _day(0), _day(0), 100.0)
-    )
-    kernel.opportunity.feature_store.store(
-        _price("AAPL_US", _day(0), _day(0), 105.0, valid_to=_day(2))
-    )
-    kernel.opportunity.feature_store.store(
-        _price("AAPL_US", _day(1), _day(1), 110.0)
-    )
+    kernel.opportunity.feature_store.store(_price("AAPL_US", _day(0), _day(0), 100.0))
+    kernel.opportunity.feature_store.store(_price("AAPL_US", _day(0), _day(0), 105.0, valid_to=_day(2)))
+    kernel.opportunity.feature_store.store(_price("AAPL_US", _day(1), _day(1), 110.0))
 
     record = kernel.opportunity.feature_store.get("AAPL_US", "price", _day(1))
     assert record is not None
@@ -149,9 +138,7 @@ def test_feature_store_as_of_returns_latest(kernel: CompanyKernel) -> None:
 
 # 4. Feature availability delay is respected.
 def test_feature_availability_delay_respected(kernel: CompanyKernel) -> None:
-    kernel.opportunity.feature_store.store(
-        _price("AAPL_US", _day(0), _day(0), 100.0, delay=86400.0)
-    )
+    kernel.opportunity.feature_store.store(_price("AAPL_US", _day(0), _day(0), 100.0, delay=86400.0))
 
     assert kernel.opportunity.feature_store.get("AAPL_US", "price", _day(0)) is None
     record = kernel.opportunity.feature_store.get("AAPL_US", "price", _day(1))
@@ -161,9 +148,7 @@ def test_feature_availability_delay_respected(kernel: CompanyKernel) -> None:
 
 # 5. Feature store refuses to serve data not yet released as-of the query time.
 def test_feature_store_no_future_data(kernel: CompanyKernel) -> None:
-    kernel.opportunity.feature_store.store(
-        _price("AAPL_US", _day(2), _day(2), 120.0)
-    )
+    kernel.opportunity.feature_store.store(_price("AAPL_US", _day(2), _day(2), 120.0))
 
     assert kernel.opportunity.feature_store.get("AAPL_US", "price", _day(1)) is None
     assert kernel.opportunity.feature_store.get("AAPL_US", "price", _day(2)) is not None
@@ -222,9 +207,7 @@ def test_experiment_lifecycle_and_contamination(kernel: CompanyKernel) -> None:
     assert exp.status == ExperimentStatus.SEALED_OOS
     assert exp.oos_set_id == oos_id
 
-    kernel.opportunity.experiments.log_contamination(
-        exp.experiment_id, "cao", "looked at OOS during discovery"
-    )
+    kernel.opportunity.experiments.log_contamination(exp.experiment_id, "cao", "looked at OOS during discovery")
     assert "cao: looked at OOS during discovery" in exp.contamination_log
     assert kernel.opportunity.oos_manager.is_contaminated(oos_id, "cao")
 
@@ -240,12 +223,8 @@ def test_backtest_buy_and_hold_baseline(kernel: CompanyKernel) -> None:
     kernel.opportunity.entity_master.register(msft)
 
     for i in range(6):
-        kernel.opportunity.feature_store.store(
-            _price("AAPL_US", _day(i), _day(i), 100.0 + i)
-        )
-        kernel.opportunity.feature_store.store(
-            _price("MSFT_US", _day(i), _day(i), 200.0 + i)
-        )
+        kernel.opportunity.feature_store.store(_price("AAPL_US", _day(i), _day(i), 100.0 + i))
+        kernel.opportunity.feature_store.store(_price("MSFT_US", _day(i), _day(i), 200.0 + i))
 
     universe = ["AAPL_US", "MSFT_US"]
     result = kernel.opportunity.backtester.run(
@@ -273,12 +252,8 @@ def test_backtest_random_baseline_deterministic(kernel: CompanyKernel) -> None:
     kernel.opportunity.entity_master.register(msft)
 
     for i in range(4):
-        kernel.opportunity.feature_store.store(
-            _price("AAPL_US", _day(i), _day(i), 100.0 + i)
-        )
-        kernel.opportunity.feature_store.store(
-            _price("MSFT_US", _day(i), _day(i), 200.0 + i)
-        )
+        kernel.opportunity.feature_store.store(_price("AAPL_US", _day(i), _day(i), 100.0 + i))
+        kernel.opportunity.feature_store.store(_price("MSFT_US", _day(i), _day(i), 200.0 + i))
 
     universe = ["AAPL_US", "MSFT_US"]
     result_a = kernel.opportunity.backtester.run(
@@ -308,16 +283,10 @@ def test_backtest_no_lookahead(kernel: CompanyKernel) -> None:
     kernel.opportunity.entity_master.register(entity)
 
     # Day 0 and day 1 prices are released immediately.
-    kernel.opportunity.feature_store.store(
-        _price("AAPL_US", _day(0), _day(0), 100.0)
-    )
-    kernel.opportunity.feature_store.store(
-        _price("AAPL_US", _day(1), _day(1), 101.0)
-    )
+    kernel.opportunity.feature_store.store(_price("AAPL_US", _day(0), _day(0), 100.0))
+    kernel.opportunity.feature_store.store(_price("AAPL_US", _day(1), _day(1), 101.0))
     # Day 2 price is released one day late; it must not be used on day 2.
-    kernel.opportunity.feature_store.store(
-        _price("AAPL_US", _day(2), _day(3), 150.0)
-    )
+    kernel.opportunity.feature_store.store(_price("AAPL_US", _day(2), _day(3), 150.0))
 
     day2_record = kernel.opportunity.feature_store.get("AAPL_US", "price", _day(2))
     assert day2_record is not None
@@ -341,12 +310,8 @@ def test_backtest_no_lookahead(kernel: CompanyKernel) -> None:
 def test_backtest_cash_baseline(kernel: CompanyKernel) -> None:
     entity = _entity("AAPL_US")
     kernel.opportunity.entity_master.register(entity)
-    kernel.opportunity.feature_store.store(
-        _price("AAPL_US", _day(0), _day(0), 100.0)
-    )
-    kernel.opportunity.feature_store.store(
-        _price("AAPL_US", _day(1), _day(1), 200.0)
-    )
+    kernel.opportunity.feature_store.store(_price("AAPL_US", _day(0), _day(0), 100.0))
+    kernel.opportunity.feature_store.store(_price("AAPL_US", _day(1), _day(1), 200.0))
 
     result = kernel.opportunity.backtester.run(
         experiment_id="EXP-000005",

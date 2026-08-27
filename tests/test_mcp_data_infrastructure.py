@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 
 import pytest
-
 from aoic_kernel.kernel import CompanyKernel
 from aoic_kernel.models import CostEstimate
 
@@ -67,7 +66,7 @@ def test_source_adapter_fallback_works():
         ["non-empty"],
         CostEstimate(monthly=50.0, unit="EUR"),
     )
-    fallback = kernel.source_adapter.register(
+    _fallback = kernel.source_adapter.register(
         "Fallback News",
         "AltNews",
         "news",
@@ -80,10 +79,7 @@ def test_source_adapter_fallback_works():
         CostEstimate(monthly=30.0, unit="EUR"),
         fallback_connector=primary.connector_id,
     )
-    # Use primary as fallback for fallback to satisfy registration order if needed
-    # Actually fallback connector must be registered first; primary registered first, then fallback uses primary.
-    # Disable primary to trigger fallback to ... but fallback's fallback is primary. Let's instead set fallback's fallback to None.
-    # Re-register fallback without fallback? Wait we cannot unregister. Simpler: use primary with fallback set to fallback, but fallback registered after primary, which violates requirement. Let's test fallback by using two connectors with first-registered fallback.
+    # Primary is disabled; calling it should fail because fallback is itself only set to primary.
     kernel.source_adapter.disable(primary.connector_id, "outage")
     with pytest.raises(RuntimeError):
         kernel.source_adapter.call(primary.connector_id, {"query": "earnings"})

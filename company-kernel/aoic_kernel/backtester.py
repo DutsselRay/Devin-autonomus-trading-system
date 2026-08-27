@@ -64,9 +64,7 @@ class Backtester:
             if not active:
                 continue
 
-            portfolio_value = cash + sum(
-                holdings.get(e, 0.0) * prices[e] for e in active
-            )
+            portfolio_value = cash + sum(holdings.get(e, 0.0) * prices[e] for e in active)
             if portfolio_value <= 0:
                 continue
 
@@ -111,13 +109,7 @@ class Backtester:
             new_target["__cash__"] = cash_weight
 
             all_keys = set(current_weights.keys()) | set(new_target.keys())
-            turnover = (
-                sum(
-                    abs(new_target.get(k, 0.0) - current_weights.get(k, 0.0))
-                    for k in all_keys
-                )
-                / 2.0
-            )
+            turnover = sum(abs(new_target.get(k, 0.0) - current_weights.get(k, 0.0)) for k in all_keys) / 2.0
 
             trade_cost = portfolio_value * turnover * cost_rate
             costs += trade_cost
@@ -166,9 +158,7 @@ class Backtester:
     @staticmethod
     def _compute_metrics(values: list[float]) -> dict[str, Any]:
         total_return = (values[-1] / values[0]) - 1.0 if values[0] else 0.0
-        daily_returns = [
-            (values[i] / values[i - 1]) - 1.0 for i in range(1, len(values))
-        ]
+        daily_returns = [(values[i] / values[i - 1]) - 1.0 for i in range(1, len(values))]
         volatility = 0.0
         sharpe = 0.0
         if len(daily_returns) > 1:

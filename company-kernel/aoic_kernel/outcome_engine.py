@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-import math
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Any
 
-from aoic_kernel.models import DurableLearning, Outcome, Prediction, ResearchOpportunity
+from aoic_kernel.models import DurableLearning, Outcome, Prediction
 
 
 class OutcomeEngine:
@@ -108,13 +107,11 @@ class OutcomeEngine:
     def snapshot(self) -> dict[str, Any]:
         return {
             "outcomes": [o.model_dump() for o in self._outcomes.values()],
-            "learnings": [l.model_dump() for l in self._learnings.values()],
+            "learnings": [learning.model_dump() for learning in self._learnings.values()],
         }
 
     @staticmethod
-    def _match(
-        predictions: list[Prediction], outcomes: list[Outcome]
-    ) -> list[tuple[Prediction, Outcome]]:
+    def _match(predictions: list[Prediction], outcomes: list[Outcome]) -> list[tuple[Prediction, Outcome]]:
         pred_by_id = {p.prediction_id: p for p in predictions if p.prediction_id}
         pairs: list[tuple[Prediction, Outcome]] = []
         for o in outcomes:

@@ -1,15 +1,14 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Any
 
-from aoic_kernel.models import AgentCharter, Authority, DecisionProposal, DecisionStatus
-from aoic_kernel.authority_engine import AuthorityEngine
 from aoic_kernel.approval_engine import ApprovalEngine
-from aoic_kernel.budget_engine import BudgetEngine
-from aoic_kernel.policy_engine import PolicyEngine
 from aoic_kernel.audit_log import ImmutableAuditLog
+from aoic_kernel.authority_engine import AuthorityEngine
+from aoic_kernel.budget_engine import BudgetEngine
 from aoic_kernel.exceptions import AOICError
+from aoic_kernel.models import AgentCharter, DecisionProposal, DecisionStatus
+from aoic_kernel.policy_engine import PolicyEngine
 
 
 class DecisionEngine:
@@ -30,7 +29,7 @@ class DecisionEngine:
         self.audit = audit
 
     def _next_audit_id(self) -> str:
-        return f"AUD-{len(self.audit.entries)+1:06d}"
+        return f"AUD-{len(self.audit.entries) + 1:06d}"
 
     def submit(self, charter: AgentCharter, proposal: DecisionProposal) -> DecisionProposal:
         """Submit a proposal for validation; does not execute."""

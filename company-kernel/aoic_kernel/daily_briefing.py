@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from typing import Any
 
-from aoic_kernel.models import DecisionProposal, RiskLevel, Reversibility
+from aoic_kernel.models import DecisionProposal
 
 
 class HumanAttentionScore:

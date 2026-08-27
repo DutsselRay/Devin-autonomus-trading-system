@@ -3,8 +3,8 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Optional
 
-from aoic_kernel.models import ApprovalRecord, Authority, DecisionProposal
 from aoic_kernel.exceptions import ApprovalExpired
+from aoic_kernel.models import ApprovalRecord, Authority
 
 
 class ApprovalEngine:

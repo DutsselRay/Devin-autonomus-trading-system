@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import inspect
 import uuid
-from datetime import datetime, timezone
 from typing import Any, Callable
 
 from aoic_kernel.agent_registry import AgentRegistry
@@ -82,9 +81,7 @@ class AgentLifecycle:
         proposal = self._get_proposal(proposal_id)
         score = self._run_agent(proposal.agent_id, proposal.agent_version, runner)
         proposal.benchmark_passed = score > threshold
-        proposal.adversarial_tests_passed = self._run_agent(
-            proposal.agent_id, proposal.agent_version, adversarial_runner
-        )
+        proposal.adversarial_tests_passed = self._run_agent(proposal.agent_id, proposal.agent_version, adversarial_runner)
         proposal.cost_latency_reliability = {"benchmark_score": score}
 
         if proposal.benchmark_passed and proposal.adversarial_tests_passed:

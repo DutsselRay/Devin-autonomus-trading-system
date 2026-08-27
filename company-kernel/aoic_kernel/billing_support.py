@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime, timezone
-from typing import Any
 
 from aoic_kernel.models import CustomerSubscription, SupportTicket
 

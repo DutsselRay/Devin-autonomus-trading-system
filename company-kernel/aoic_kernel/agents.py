@@ -1,10 +1,20 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
 from typing import Any
 
-from aoic_kernel.models import AgentCharter, Authority, DecisionProposal, DecisionStatus, Dissent
 from aoic_kernel.kernel import CompanyKernel
+from aoic_kernel.models import (
+    AgentCharter,
+    Authority,
+    CostEstimate,
+    DecisionProposal,
+    DecisionStatus,
+    Dissent,
+    Evidence,
+    Reversibility,
+    RiskLevel,
+    ValueEstimate,
+)
 
 
 class ExecutiveAgent:
@@ -38,11 +48,12 @@ class ExecutiveAgent:
             problem=problem,
             recommendation=recommendation,
             alternatives=alternatives,
-            evidence=evidence or [],
-            expected_value=expected_value,
-            cost=cost,
-            reversibility=reversibility,
-            regulatory_risk=regulatory_risk,
+            evidence=[Evidence(**e) for e in evidence] if evidence else [],
+            expected_value=ValueEstimate(**expected_value),
+            cost=CostEstimate(**cost),
+            confidence=None,
+            reversibility=Reversibility(reversibility),
+            regulatory_risk=RiskLevel(regulatory_risk),
             rollback_plan=rollback_plan,
             required_authority=required_authority,
             dissent=dissent or [],
@@ -78,7 +89,7 @@ class CRCSO(ExecutiveAgent):
         proposal.status = DecisionStatus.REJECTED
         self.kernel.authority.set_global_risk_state("INCIDENT")
         self.kernel.audit.append(
-            entry_id=f"AUD-{len(self.kernel.audit.entries)+1:06d}",
+            entry_id=f"AUD-{len(self.kernel.audit.entries) + 1:06d}",
             event_type="CRCSO_VETO",
             actor=self.charter.agent_id,
             action="veto",

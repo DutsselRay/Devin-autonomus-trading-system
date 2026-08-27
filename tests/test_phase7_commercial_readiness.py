@@ -3,7 +3,6 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 
 import pytest
-
 from aoic_kernel.kernel import CompanyKernel
 from aoic_kernel.models import LaunchGateStatus
 
@@ -27,9 +26,7 @@ def test_commercial_readiness_not_ready_without_gates():
 def test_commercial_readiness_ready_after_all_gates():
     kernel = CompanyKernel()
     for gate in kernel.commercial_readiness.required_gates:
-        kernel.commercial_readiness.submit_gate(
-            gate, LaunchGateStatus.PASSED, "crcso", evidence=["review-doc"]
-        )
+        kernel.commercial_readiness.submit_gate(gate, LaunchGateStatus.PASSED, "crcso", evidence=["review-doc"])
     assert kernel.commercial_readiness.is_ready()
 
 
@@ -54,7 +51,7 @@ def test_public_track_record_only_includes_resolved_predictions():
         release_at=now,
     )
     kernel.live_predictions.resolve(p1.prediction_id, actual_value=155.0)
-    p2 = kernel.live_predictions.record(
+    _p2 = kernel.live_predictions.record(
         entity_id="TSLA",
         feature_name="close",
         horizon=timedelta(days=1),
@@ -113,9 +110,7 @@ def test_a5_launch_requires_all_gates():
 def test_a5_launch_approved_when_ready():
     kernel = CompanyKernel()
     for gate in kernel.commercial_readiness.required_gates:
-        kernel.commercial_readiness.submit_gate(
-            gate, LaunchGateStatus.PASSED, "crcso", evidence=["review-doc"]
-        )
+        kernel.commercial_readiness.submit_gate(gate, LaunchGateStatus.PASSED, "crcso", evidence=["review-doc"])
     decision = kernel.a5_launch.request_launch("track record verified")
     approved = kernel.a5_launch.approve(decision.decision_id, "human-principal")
     assert approved.status == "APPROVED"

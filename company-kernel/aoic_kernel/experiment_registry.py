@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Any
 
 from aoic_kernel.models import Experiment, ExperimentStatus
@@ -47,15 +46,11 @@ class ExperimentRegistry:
         experiment.contamination_log.append(f"failed: {reason}")
         return experiment
 
-    def log_contamination(
-        self, experiment_id: str, agent_id: str, reason: str
-    ) -> None:
+    def log_contamination(self, experiment_id: str, agent_id: str, reason: str) -> None:
         experiment = self._get_or_raise(experiment_id)
         experiment.contamination_log.append(f"{agent_id}: {reason}")
         if experiment.oos_set_id:
-            self.oos_manager.mark_contaminated(
-                experiment.oos_set_id, agent_id, reason
-            )
+            self.oos_manager.mark_contaminated(experiment.oos_set_id, agent_id, reason)
 
     def _get_or_raise(self, experiment_id: str) -> Experiment:
         experiment = self._experiments.get(experiment_id)
@@ -64,6 +59,4 @@ class ExperimentRegistry:
         return experiment
 
     def snapshot(self) -> dict[str, Any]:
-        return {
-            eid: exp.model_dump() for eid, exp in self._experiments.items()
-        }
+        return {eid: exp.model_dump() for eid, exp in self._experiments.items()}

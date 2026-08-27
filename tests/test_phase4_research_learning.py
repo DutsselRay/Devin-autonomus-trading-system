@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
+from typing import Any
 
 import pytest
-
 from aoic_kernel.kernel import CompanyKernel
 from aoic_kernel.models import (
     CommitteeReview,
@@ -151,12 +151,8 @@ def test_research_funnel_screen_and_triage(kernel: CompanyKernel) -> None:
     )
 
     for i in range(3):
-        kernel.opportunity.feature_store.store(
-            _feature("AAPL_US", "momentum", _day(i), _day(i), 1.5)
-        )
-        kernel.opportunity.feature_store.store(
-            _feature("MSFT_US", "momentum", _day(i), _day(i), 0.5)
-        )
+        kernel.opportunity.feature_store.store(_feature("AAPL_US", "momentum", _day(i), _day(i), 1.5))
+        kernel.opportunity.feature_store.store(_feature("MSFT_US", "momentum", _day(i), _day(i), 0.5))
 
     pattern = _pattern(eligible=["AAPL_US", "MSFT_US"])
     kernel.opportunity.patterns.register(pattern)
@@ -165,14 +161,10 @@ def test_research_funnel_screen_and_triage(kernel: CompanyKernel) -> None:
         record = fs.get(entity_id, "momentum", as_of)
         return record is not None and record.value > 1.0
 
-    screened = kernel.opportunity.research.screen(
-        ["AAPL_US", "MSFT_US"], _day(2), predicate
-    )
+    screened = kernel.opportunity.research.screen(["AAPL_US", "MSFT_US"], _day(2), predicate)
     assert screened == ["AAPL_US"]
 
-    triaged = kernel.opportunity.research.triage(
-        screened, _day(2), pattern.pattern_id
-    )
+    triaged = kernel.opportunity.research.triage(screened, _day(2), pattern.pattern_id)
     assert len(triaged) == 1
     assert triaged[0].entity_id == "AAPL_US"
 
@@ -189,9 +181,7 @@ def test_adversarial_committee_review(kernel: CompanyKernel) -> None:
     assert len(reviewed.committee_reviews) == 3
     assert reviewed.committee_reviews[1].dissent == "valuation stretched"
     expected_score = (0.8 - 0.2 + 0.1) / 3
-    assert kernel.opportunity.research.committee_score(reviewed) == pytest.approx(
-        expected_score, abs=1e-9
-    )
+    assert kernel.opportunity.research.committee_score(reviewed) == pytest.approx(expected_score, abs=1e-9)
 
 
 # 6. Publication gate passes with calibrated probability > 0.90.
@@ -210,9 +200,7 @@ def test_publication_gate_passes(kernel: CompanyKernel) -> None:
         ]
     )
 
-    result = kernel.opportunity.publication.evaluate(
-        opportunity, calibration_id="CAL-000001"
-    )
+    result = kernel.opportunity.publication.evaluate(opportunity, calibration_id="CAL-000001")
     assert result["status"] == "PASS"
     assert opportunity.status == "PUBLISHED"
 
@@ -223,9 +211,7 @@ def test_publication_gate_abstains_low_probability(kernel: CompanyKernel) -> Non
     kernel.opportunity.calibration.fit("CAL-000002", "v1", scores)
 
     opportunity = _opportunity(probability=0.85)
-    result = kernel.opportunity.publication.evaluate(
-        opportunity, calibration_id="CAL-000002"
-    )
+    result = kernel.opportunity.publication.evaluate(opportunity, calibration_id="CAL-000002")
     assert result["status"] == "ABSTAIN"
     assert "probability" in str(result["reasons"])
 
@@ -242,17 +228,13 @@ def test_publication_gate_abstains_small_sample(kernel: CompanyKernel) -> None:
 def test_publication_gate_abstains_calibration_issues(kernel: CompanyKernel) -> None:
     opportunity = _opportunity(probability=0.95, sample_size=40)
     # Missing calibration run.
-    result = kernel.opportunity.publication.evaluate(
-        opportunity, calibration_id="CAL-MISSING"
-    )
+    result = kernel.opportunity.publication.evaluate(opportunity, calibration_id="CAL-MISSING")
     assert result["status"] == "ABSTAIN"
     assert "calibration" in str(result["reasons"])
 
     # Insufficient calibration.
     kernel.opportunity.calibration.fit("CAL-000003", "v1", [(0.9, 1.0)])
-    result2 = kernel.opportunity.publication.evaluate(
-        opportunity, calibration_id="CAL-000003"
-    )
+    result2 = kernel.opportunity.publication.evaluate(opportunity, calibration_id="CAL-000003")
     assert result2["status"] == "ABSTAIN"
     assert "insufficient" in str(result2["reasons"]).lower()
 
@@ -285,21 +267,13 @@ def test_outcome_attribution_and_hit_rate(kernel: CompanyKernel) -> None:
         probability=0.85,
     )
 
-    kernel.opportunity.outcomes.record_outcome(
-        "OUT-000001", pred_a, _day(5), actual_return=0.05
-    )
-    kernel.opportunity.outcomes.record_outcome(
-        "OUT-000002", pred_b, _day(5), actual_return=-0.01
-    )
+    kernel.opportunity.outcomes.record_outcome("OUT-000001", pred_a, _day(5), actual_return=0.05)
+    kernel.opportunity.outcomes.record_outcome("OUT-000002", pred_b, _day(5), actual_return=-0.01)
 
-    hit_rate = kernel.opportunity.outcomes.hit_rate(
-        list(kernel.opportunity.outcomes._outcomes.values())
-    )
+    hit_rate = kernel.opportunity.outcomes.hit_rate(list(kernel.opportunity.outcomes._outcomes.values()))
     assert hit_rate == 0.5
 
-    brier = kernel.opportunity.outcomes.brier_score(
-        [pred_a, pred_b], list(kernel.opportunity.outcomes._outcomes.values())
-    )
+    brier = kernel.opportunity.outcomes.brier_score([pred_a, pred_b], list(kernel.opportunity.outcomes._outcomes.values()))
     assert brier is not None
     assert brier >= 0
 

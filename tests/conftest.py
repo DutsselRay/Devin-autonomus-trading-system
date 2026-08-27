@@ -1,24 +1,22 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 from pathlib import Path
-import pytest
 
+import pytest
 from aoic_kernel.kernel import CompanyKernel
+from aoic_kernel.loaders import load_agent_charter
 from aoic_kernel.models import (
     AgentCharter,
     Authority,
-    BudgetEntry,
     CostEstimate,
     DecisionProposal,
     Evidence,
     PITRecord,
-    PolicyRule,
-    RiskLevel,
     Reversibility,
+    RiskLevel,
     ValueEstimate,
 )
-from aoic_kernel.loaders import load_agent_charter
 
 
 @pytest.fixture
@@ -28,44 +26,32 @@ def kernel() -> CompanyKernel:
 
 @pytest.fixture
 def human_principal() -> AgentCharter:
-    return load_agent_charter(
-        Path(__file__).parent.parent / "company" / "charters" / "human_principal.yaml"
-    )
+    return load_agent_charter(Path(__file__).parent.parent / "company" / "charters" / "human_principal.yaml")
 
 
 @pytest.fixture
 def global_ceo() -> AgentCharter:
-    return load_agent_charter(
-        Path(__file__).parent.parent / "company" / "charters" / "global_ceo.yaml"
-    )
+    return load_agent_charter(Path(__file__).parent.parent / "company" / "charters" / "global_ceo.yaml")
 
 
 @pytest.fixture
 def crcso() -> AgentCharter:
-    return load_agent_charter(
-        Path(__file__).parent.parent / "company" / "charters" / "crcso.yaml"
-    )
+    return load_agent_charter(Path(__file__).parent.parent / "company" / "charters" / "crcso.yaml")
 
 
 @pytest.fixture
 def product_ceo() -> AgentCharter:
-    return load_agent_charter(
-        Path(__file__).parent.parent / "company" / "charters" / "product_ceo.yaml"
-    )
+    return load_agent_charter(Path(__file__).parent.parent / "company" / "charters" / "product_ceo.yaml")
 
 
 @pytest.fixture
 def business_ceo() -> AgentCharter:
-    return load_agent_charter(
-        Path(__file__).parent.parent / "company" / "charters" / "business_ceo.yaml"
-    )
+    return load_agent_charter(Path(__file__).parent.parent / "company" / "charters" / "business_ceo.yaml")
 
 
 @pytest.fixture
 def cao() -> AgentCharter:
-    return load_agent_charter(
-        Path(__file__).parent.parent / "company" / "charters" / "cao.yaml"
-    )
+    return load_agent_charter(Path(__file__).parent.parent / "company" / "charters" / "cao.yaml")
 
 
 def make_proposal(

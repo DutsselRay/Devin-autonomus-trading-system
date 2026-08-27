@@ -1,16 +1,18 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Optional
 from uuid import uuid4
 
 from aoic_kernel.models import MaturityCriterion, MaturityLevel, MaturityScore
 
-
 REQUIRED_MATURITY_CRITERIA = [
     ("C1", "Constitutional constraints are technically enforced and adversarially tested."),
     ("C2", "Every material decision is reproducible from PIT evidence and versioned code."),
-    ("C3", "The Opportunity Engine beats approved simple baselines across sealed OOS, regimes and shadow-live operation after realistic costs."),
+    (
+        "C3",
+        "The Opportunity Engine beats approved simple baselines across sealed OOS, "
+        "regimes and shadow-live operation after realistic costs.",
+    ),
     ("C4", "Probabilities are calibrated; abstention works; the publication gate cannot be bypassed."),
     ("C5", "Compliance, data rights, PSP acceptance, claims and jurisdiction scope are approved before monetization."),
     ("C6", "Agent evolution uses fixed evals, shadow/canary deployment and reliable rollback without self-granted authority."),

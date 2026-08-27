@@ -24,21 +24,15 @@ class SealedOOSSet:
 
     def access(self, agent_id: str) -> Any:
         if agent_id in self.contaminated_by:
-            raise ContaminationError(
-                f"OOS set {self.oos_set_id} was contaminated by {agent_id}"
-            )
+            raise ContaminationError(f"OOS set {self.oos_set_id} was contaminated by {agent_id}")
         if agent_id != self.owner and not agent_id.endswith("_auditor"):
-            raise OOSAccessDenied(
-                f"Agent {agent_id} is not allowed to access sealed OOS set {self.oos_set_id}"
-            )
+            raise OOSAccessDenied(f"Agent {agent_id} is not allowed to access sealed OOS set {self.oos_set_id}")
         self.access_log.append({"agent_id": agent_id, "at": datetime.now()})
         return self.data
 
     def mark_contaminated(self, agent_id: str, reason: str) -> None:
         self.contaminated_by.add(agent_id)
-        self.access_log.append(
-            {"agent_id": agent_id, "at": datetime.now(), "reason": reason, "contaminated": True}
-        )
+        self.access_log.append({"agent_id": agent_id, "at": datetime.now(), "reason": reason, "contaminated": True})
 
 
 class SealedOOSSetManager:

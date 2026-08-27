@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Any
 
 from aoic_kernel.models import Pattern, PatternStatus
@@ -36,9 +35,7 @@ class PatternEngine:
     ) -> Pattern:
         pattern = self._get_or_raise(pattern_id)
         if new_status not in self.VALID_PROMOTIONS.get(pattern.status, set()):
-            raise ValueError(
-                f"Invalid promotion {pattern.status.value} -> {new_status.value}"
-            )
+            raise ValueError(f"Invalid promotion {pattern.status.value} -> {new_status.value}")
         pattern.status = new_status
         if experiment_id:
             pattern.experiment_ids.append(experiment_id)
@@ -60,9 +57,7 @@ class PatternEngine:
         return [p for p in self._patterns.values() if p.status != PatternStatus.RETIRED]
 
     def snapshot(self) -> dict[str, Any]:
-        return {
-            pid: p.model_dump() for pid, p in self._patterns.items()
-        }
+        return {pid: p.model_dump() for pid, p in self._patterns.items()}
 
     def _get_or_raise(self, pattern_id: str) -> Pattern:
         pattern = self._patterns.get(pattern_id)

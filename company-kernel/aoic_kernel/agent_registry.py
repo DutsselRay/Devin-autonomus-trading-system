@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from aoic_kernel.models import AgentCharter
 from aoic_kernel.exceptions import CharterInvalid
+from aoic_kernel.models import AgentCharter
 
 
 class AgentRegistry:

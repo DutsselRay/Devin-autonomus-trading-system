@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
 
-from aoic_kernel.models import DecisionProposal, PITRecord, RiskLevel
-from aoic_kernel.policy_engine import PolicyEngine
 from aoic_kernel.audit_log import ImmutableAuditLog
-from aoic_kernel.exceptions import PublicationGateBlocked, PITViolation
+from aoic_kernel.exceptions import PublicationGateBlocked
+from aoic_kernel.models import DecisionProposal, PITRecord
+from aoic_kernel.policy_engine import PolicyEngine
 
 
 class PublicationGate:
@@ -42,7 +41,7 @@ class PublicationGate:
         if reasons:
             msg = "; ".join(reasons)
             self.audit.append(
-                entry_id=f"AUD-{len(self.audit.entries)+1:06d}",
+                entry_id=f"AUD-{len(self.audit.entries) + 1:06d}",
                 event_type="PUBLICATION_BLOCKED",
                 actor="publication_gate",
                 action="evaluate",
@@ -53,7 +52,7 @@ class PublicationGate:
             raise PublicationGateBlocked(msg)
 
         self.audit.append(
-            entry_id=f"AUD-{len(self.audit.entries)+1:06d}",
+            entry_id=f"AUD-{len(self.audit.entries) + 1:06d}",
             event_type="PUBLICATION_PASSED",
             actor="publication_gate",
             action="evaluate",

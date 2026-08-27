@@ -22,7 +22,7 @@ class EventBus:
         causality: dict[str, Any] | None = None,
     ) -> AOICEvent:
         event = AOICEvent(
-            event_id=event_id or f"EVT-{len(self._events)+1:06d}",
+            event_id=event_id or f"EVT-{len(self._events) + 1:06d}",
             event_type=event_type,
             timestamp=datetime.now(timezone.utc),
             source=source,

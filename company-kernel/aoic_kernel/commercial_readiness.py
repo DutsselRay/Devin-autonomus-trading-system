@@ -6,7 +6,6 @@ from typing import Any
 
 from aoic_kernel.models import LaunchGate, LaunchGateStatus
 
-
 REQUIRED_GATES = [
     "legal_review",
     "licensing_review",
@@ -52,7 +51,8 @@ class CommercialReadiness:
     def readiness(self) -> dict[str, Any]:
         missing = [g for g in self.required_gates if g not in self._gates]
         failed = [
-            g for g in self.required_gates
+            g
+            for g in self.required_gates
             if g in self._gates and self._gates[g].status not in {LaunchGateStatus.PASSED, LaunchGateStatus.WAIVED}
         ]
         return {

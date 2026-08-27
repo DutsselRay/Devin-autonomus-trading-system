@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from typing import Any, Optional
 from uuid import uuid4
 
-from aoic_kernel.models import CostEstimate, SourceConnector, ConnectorStatus
+from aoic_kernel.models import ConnectorStatus, CostEstimate, SourceConnector
 
 
 class SourceAdapter:

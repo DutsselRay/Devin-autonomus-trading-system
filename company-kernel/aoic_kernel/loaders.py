@@ -11,7 +11,8 @@ from aoic_kernel.models import AgentCharter, SkillContract
 def _coerce_datetime(value: Any) -> Any:
     if isinstance(value, str) and len(value) >= 10 and value[4] == "-" and value[7] == "-":
         try:
-            from datetime import datetime, timezone
+            from datetime import datetime
+
             dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
             return dt
         except ValueError:

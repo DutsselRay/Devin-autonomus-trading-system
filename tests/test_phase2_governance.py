@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 import pytest
-
-from aoic_kernel.kernel import CompanyKernel
-from aoic_kernel.agents import GlobalCEO, ProductCEO, BusinessCEO, CRCSO
-from aoic_kernel.models import AgentCharter, Authority, RiskLevel, Reversibility
+from aoic_kernel.agents import CRCSO, BusinessCEO, GlobalCEO, ProductCEO
 from aoic_kernel.daily_briefing import DailyBriefing, HumanAttentionScore
 from aoic_kernel.exceptions import AuthorityDenied
+from aoic_kernel.kernel import CompanyKernel
+from aoic_kernel.models import AgentCharter, Authority, Reversibility, RiskLevel
+
 from tests.conftest import make_proposal
 
 
@@ -89,6 +89,7 @@ def test_human_attention_score_ranking() -> None:
 def test_daily_briefing_cap() -> None:
     briefing = DailyBriefing()
     from aoic_kernel.models import DecisionProposal
+
     for i in range(15):
         seq = 200 + i
         p = DecisionProposal(

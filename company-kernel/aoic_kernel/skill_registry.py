@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from aoic_kernel.models import SkillContract
 from aoic_kernel.exceptions import CharterInvalid
+from aoic_kernel.models import SkillContract
 
 
 class SkillRegistry:

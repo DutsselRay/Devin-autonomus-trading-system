@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 
 import pytest
-
 from aoic_kernel.kernel import CompanyKernel
 from aoic_kernel.models import RiskLevel
 
@@ -20,9 +19,7 @@ def test_kernel_exposes_phase8_components():
 def test_cmo_growth_campaign_lifecycle():
     kernel = CompanyKernel()
     start = datetime.now(timezone.utc)
-    campaign = kernel.cmo_growth.create(
-        "Q4 outreach", "email", "institutional investors", 5000.0, start
-    )
+    campaign = kernel.cmo_growth.create("Q4 outreach", "email", "institutional investors", 5000.0, start)
     assert campaign.status == "DRAFT"
     kernel.cmo_growth.review(campaign.campaign_id, ["audience-ok"])
     kernel.cmo_growth.start(campaign.campaign_id)
@@ -79,17 +76,13 @@ def test_procurement_reject():
 def test_enterprise_auditor_requires_registration():
     kernel = CompanyKernel()
     with pytest.raises(ValueError, match="registered"):
-        kernel.enterprise_audit.submit_finding(
-            "payments", RiskLevel.HIGH, "missing logs", "unregistered-auditor", evidence=["ev1"]
-        )
+        kernel.enterprise_audit.submit_finding("payments", RiskLevel.HIGH, "missing logs", "unregistered-auditor", evidence=["ev1"])
 
 
 def test_enterprise_auditor_finding_lifecycle():
     kernel = CompanyKernel()
     kernel.enterprise_audit.register_auditor("external-1")
-    finding = kernel.enterprise_audit.submit_finding(
-        "access control", RiskLevel.HIGH, "stale keys", "external-1", evidence=["key-list"]
-    )
+    finding = kernel.enterprise_audit.submit_finding("access control", RiskLevel.HIGH, "stale keys", "external-1", evidence=["key-list"])
     kernel.enterprise_audit.accept(finding.finding_id)
     assert kernel.enterprise_audit.get(finding.finding_id).status == "ACCEPTED"
     kernel.enterprise_audit.remediate(finding.finding_id)
@@ -99,9 +92,7 @@ def test_enterprise_auditor_finding_lifecycle():
 def test_enterprise_auditor_dispute():
     kernel = CompanyKernel()
     kernel.enterprise_audit.register_auditor("external-2")
-    finding = kernel.enterprise_audit.submit_finding(
-        "data", RiskLevel.MEDIUM, "sample issue", "external-2", evidence=["doc"]
-    )
+    finding = kernel.enterprise_audit.submit_finding("data", RiskLevel.MEDIUM, "sample issue", "external-2", evidence=["doc"])
     kernel.enterprise_audit.dispute(finding.finding_id, "scope mismatch")
     assert kernel.enterprise_audit.get(finding.finding_id).status == "DISPUTED"
 
@@ -139,7 +130,7 @@ def test_b2b_gate_requires_evidence_for_proof():
 
 def test_b2b_gate_approves_after_v1_proof():
     kernel = CompanyKernel()
-    gate = kernel.b2b_gate.register("api-tier", "API Tier")
+    _gate = kernel.b2b_gate.register("api-tier", "API Tier")
     kernel.b2b_gate.submit_v1_proof("api-tier", ["public-track-record-ok"])
     approved = kernel.b2b_gate.approve("api-tier", "cso")
     assert approved.status == "APPROVED"

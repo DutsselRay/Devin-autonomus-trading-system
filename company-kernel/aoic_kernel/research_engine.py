@@ -1,17 +1,16 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-from typing import Any, Callable
+from datetime import datetime
+from typing import Callable
 
+from aoic_kernel.feature_store import TemporalFeatureStore
 from aoic_kernel.models import (
     CommitteeReview,
     CommitteeRole,
-    FeatureRecord,
     ResearchOpportunity,
 )
 from aoic_kernel.pattern_engine import PatternEngine
-from aoic_kernel.feature_store import TemporalFeatureStore
 
 
 class ResearchEngine:
@@ -103,15 +102,11 @@ class ResearchEngine:
 
     def committee_score(self, opportunity: ResearchOpportunity) -> float:
         """Return Judge score, or average if no Judge present."""
-        judge_reviews = [
-            r for r in opportunity.committee_reviews if r.role == CommitteeRole.JUDGE
-        ]
+        judge_reviews = [r for r in opportunity.committee_reviews if r.role == CommitteeRole.JUDGE]
         if judge_reviews:
             return sum(r.score for r in judge_reviews) / len(judge_reviews)
         if opportunity.committee_reviews:
-            return sum(r.score for r in opportunity.committee_reviews) / len(
-                opportunity.committee_reviews
-            )
+            return sum(r.score for r in opportunity.committee_reviews) / len(opportunity.committee_reviews)
         return 0.0
 
     def get_opportunity(self, opportunity_id: str) -> ResearchOpportunity | None:

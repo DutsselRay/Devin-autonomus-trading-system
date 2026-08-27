@@ -25,9 +25,7 @@ class EntityMaster:
     def ingest(self, record: PITRecord) -> None:
         self._pit_records.append(record)
 
-    def pit_history(
-        self, entity_id: str, as_of: datetime | None = None
-    ) -> list[PITRecord]:
+    def pit_history(self, entity_id: str, as_of: datetime | None = None) -> list[PITRecord]:
         records = [r for r in self._pit_records if r.entity_id == entity_id]
         if as_of is not None:
             records = [r for r in records if r.is_available_at(as_of)]

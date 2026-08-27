@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
 from typing import Any
 
-from aoic_kernel.models import BudgetEntry
 from aoic_kernel.exceptions import BudgetExceeded
+from aoic_kernel.models import BudgetEntry
 
 
 class BudgetEngine:
@@ -21,9 +20,7 @@ class BudgetEngine:
     def reserve(self, budget_id: str, amount: float) -> BudgetEntry:
         budget = self._budgets[budget_id]
         if budget.hard_cap and budget.consumed + amount > budget.allocated:
-            raise BudgetExceeded(
-                f"Budget {budget_id} cap {budget.allocated} would be exceeded by {budget.consumed + amount}"
-            )
+            raise BudgetExceeded(f"Budget {budget_id} cap {budget.allocated} would be exceeded by {budget.consumed + amount}")
         budget.consumed += amount
         return budget
 
@@ -44,9 +41,7 @@ class BudgetEngine:
 
         budget = self._budgets[budget_id]
         if budget.hard_cap and budget.consumed + cost > budget.allocated:
-            raise BudgetExceeded(
-                f"Budget {budget_id} would exceed allocated {budget.allocated}"
-            )
+            raise BudgetExceeded(f"Budget {budget_id} would exceed allocated {budget.allocated}")
 
         budget.consumed += cost
         if idempotency_key:

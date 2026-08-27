@@ -41,9 +41,7 @@ class CalibrationEngine:
 
             run.brier_score = self._brier(probs, outcomes)
             run.log_loss = self._log_loss(probs, outcomes)
-            run.expected_calibration_error = self._expected_calibration_error(
-                probs, outcomes
-            )
+            run.expected_calibration_error = self._expected_calibration_error(probs, outcomes)
             run.status = "VALID"
 
         self._runs[calibration_id] = run
@@ -103,17 +101,13 @@ class CalibrationEngine:
         return total / len(probs)
 
     @staticmethod
-    def _expected_calibration_error(
-        probs: list[float], outcomes: list[float], n_bins: int = 10
-    ) -> float:
+    def _expected_calibration_error(probs: list[float], outcomes: list[float], n_bins: int = 10) -> float:
         if not probs:
             return 0.0
         bin_edges = [i / n_bins for i in range(n_bins + 1)]
         ece = 0.0
         for low, high in zip(bin_edges[:-1], bin_edges[1:]):
-            indices = [
-                i for i, p in enumerate(probs) if low <= p < high or (high == 1.0 and p == 1.0)
-            ]
+            indices = [i for i, p in enumerate(probs) if low <= p < high or (high == 1.0 and p == 1.0)]
             if not indices:
                 continue
             bin_acc = sum(outcomes[i] for i in indices) / len(indices)

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import inspect
 import uuid
-from datetime import datetime, timezone
 from typing import Any, Callable
 
 from aoic_kernel.models import ShadowChallenge
@@ -41,7 +40,7 @@ class ShadowChallenger:
             "challenger": challenger_score,
             "baseline": baseline_score,
         }
-        winner = max(scores, key=scores.get)  # type: ignore[arg-type]
+        winner = max(scores, key=scores.get)
 
         status_map = {
             "incumbent": "INCUMBENT_WINS",

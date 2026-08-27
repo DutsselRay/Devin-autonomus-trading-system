@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Any
 
-from aoic_kernel.models import ResearchOpportunity
 from aoic_kernel.calibration import CalibrationEngine
+from aoic_kernel.models import ResearchOpportunity
 
 
 class ResearchPublicationGate:
@@ -25,14 +24,10 @@ class ResearchPublicationGate:
         reasons: list[str] = []
 
         if opportunity.probability is None or opportunity.probability <= self.PROBABILITY_GATE:
-            reasons.append(
-                f"probability {opportunity.probability} not above gate {self.PROBABILITY_GATE}"
-            )
+            reasons.append(f"probability {opportunity.probability} not above gate {self.PROBABILITY_GATE}")
 
         if opportunity.sample_size is None or opportunity.sample_size < self.MIN_SAMPLE_SIZE:
-            reasons.append(
-                f"sample size {opportunity.sample_size} below minimum {self.MIN_SAMPLE_SIZE}"
-            )
+            reasons.append(f"sample size {opportunity.sample_size} below minimum {self.MIN_SAMPLE_SIZE}")
 
         if opportunity.committee_reviews:
             dissent = [r for r in opportunity.committee_reviews if r.dissent]
@@ -45,9 +40,7 @@ class ResearchPublicationGate:
             reasons.append("no committee review")
 
         if calibration_id:
-            calibrated_prob, meta = self.calibration_engine.calibrate(
-                opportunity.probability or 0.0, calibration_id
-            )
+            calibrated_prob, meta = self.calibration_engine.calibrate(opportunity.probability or 0.0, calibration_id)
             opportunity.calibration_score = meta.get("expected_calibration_error")
             if meta.get("abstain"):
                 reasons.append(f"calibration abstains: {meta['reason']}")

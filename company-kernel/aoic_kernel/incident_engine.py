@@ -51,9 +51,7 @@ class IncidentEngine:
         return self._transition(incident_id, IncidentStatus.CLASSIFIED, severity=severity)
 
     def contain(self, incident_id: str) -> Incident:
-        return self._transition(
-            incident_id, IncidentStatus.CONTAINED, contained_at=datetime.now(timezone.utc)
-        )
+        return self._transition(incident_id, IncidentStatus.CONTAINED, contained_at=datetime.now(timezone.utc))
 
     def preserve_evidence(self, incident_id: str, evidence: list[str]) -> Incident:
         incident = self._transition(incident_id, IncidentStatus.EVIDENCE_PRESERVED)
@@ -66,33 +64,23 @@ class IncidentEngine:
         return incident
 
     def recover(self, incident_id: str) -> Incident:
-        return self._transition(
-            incident_id, IncidentStatus.RECOVERING, recovered_at=datetime.now(timezone.utc)
-        )
+        return self._transition(incident_id, IncidentStatus.RECOVERING, recovered_at=datetime.now(timezone.utc))
 
     def verify(self, incident_id: str) -> Incident:
-        return self._transition(
-            incident_id, IncidentStatus.VERIFIED, verified_at=datetime.now(timezone.utc)
-        )
+        return self._transition(incident_id, IncidentStatus.VERIFIED, verified_at=datetime.now(timezone.utc))
 
     def postmortem(self, incident_id: str, report: str) -> Incident:
-        incident = self._transition(
-            incident_id, IncidentStatus.POSTMORTEM, postmortem_at=datetime.now(timezone.utc)
-        )
+        incident = self._transition(incident_id, IncidentStatus.POSTMORTEM, postmortem_at=datetime.now(timezone.utc))
         incident.postmortem_report = report
         return incident
 
     def remediate(self, incident_id: str, plan: str) -> Incident:
-        incident = self._transition(
-            incident_id, IncidentStatus.REMEDIATED, remediated_at=datetime.now(timezone.utc)
-        )
+        incident = self._transition(incident_id, IncidentStatus.REMEDIATED, remediated_at=datetime.now(timezone.utc))
         incident.remediation_plan = plan
         return incident
 
     def close(self, incident_id: str) -> Incident:
-        return self._transition(
-            incident_id, IncidentStatus.CLOSED, closed_at=datetime.now(timezone.utc)
-        )
+        return self._transition(incident_id, IncidentStatus.CLOSED, closed_at=datetime.now(timezone.utc))
 
     def get(self, incident_id: str) -> Incident | None:
         return self._incidents.get(incident_id)
@@ -113,9 +101,7 @@ class IncidentEngine:
         if incident is None:
             raise KeyError(f"Unknown incident {incident_id}")
         if target not in self.VALID_TRANSITIONS.get(incident.status, set()):
-            raise ValueError(
-                f"Invalid transition from {incident.status.value} to {target.value}"
-            )
+            raise ValueError(f"Invalid transition from {incident.status.value} to {target.value}")
         incident.status = target
         for key, value in updates.items():
             setattr(incident, key, value)
