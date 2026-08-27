@@ -573,3 +573,64 @@ class DashboardSnapshot(BaseModel):
     active_incidents: list[Incident] = Field(default_factory=list)
     attention_score: dict[str, Any] = Field(default_factory=dict)
     audit_summary: dict[str, int] = Field(default_factory=dict)
+
+
+class LaunchGateStatus(str, Enum):
+    PENDING = "PENDING"
+    PASSED = "PASSED"
+    FAILED = "FAILED"
+    WAIVED = "WAIVED"
+
+
+class LaunchGate(BaseModel):
+    gate_id: str
+    name: str
+    status: LaunchGateStatus
+    evidence: list[str] = Field(default_factory=list)
+    reviewed_by: str
+    reviewed_at: datetime
+    expires_at: Optional[datetime] = None
+
+
+class CustomerSubscription(BaseModel):
+    subscription_id: str
+    customer_id: str
+    plan: str
+    status: str = "ACTIVE"  # ACTIVE, SUSPENDED, CANCELLED
+    start_date: datetime
+    billing_cycle: str = "monthly"
+    price: float
+    currency: str = "EUR"
+
+
+class SupportTicket(BaseModel):
+    ticket_id: str
+    customer_id: str
+    subject: str
+    severity: str
+    status: str = "OPEN"  # OPEN, PENDING, RESOLVED, CLOSED
+    created_at: datetime
+    resolved_at: Optional[datetime] = None
+    evidence_links: list[str] = Field(default_factory=list)
+
+
+class TrackRecordEntry(BaseModel):
+    entry_id: str
+    prediction_id: str
+    entity_id: str
+    predicted_value: Any
+    actual_value: Any
+    probability: float
+    release_at: datetime
+    resolved_at: datetime
+    evidence: list[str] = Field(default_factory=list)
+    claim: str
+
+
+class LaunchDecision(BaseModel):
+    decision_id: str
+    status: str = "PENDING"  # PENDING, APPROVED, DENIED
+    approved_by: Optional[str] = None
+    approved_at: Optional[datetime] = None
+    gates: list[str] = Field(default_factory=list)
+    rationale: str = ""

@@ -24,6 +24,10 @@ from aoic_kernel.agent_lifecycle import AgentLifecycle
 from aoic_kernel.live_prediction import LivePredictionRegistry
 from aoic_kernel.incident_engine import IncidentEngine
 from aoic_kernel.dashboard import InternalDashboard, AuditView
+from aoic_kernel.commercial_readiness import CommercialReadiness
+from aoic_kernel.public_track_record import PublicTrackRecord
+from aoic_kernel.billing_support import BillingSupport
+from aoic_kernel.a5_launch import A5Launch, CustomerWeb
 
 
 class CompanyKernel:
@@ -72,3 +76,8 @@ class CompanyKernel:
             incidents=self.incidents,
         )
         self.audit_view = AuditView(self.audit)
+        self.commercial_readiness = CommercialReadiness()
+        self.public_track_record = PublicTrackRecord(self.live_predictions)
+        self.billing_support = BillingSupport()
+        self.a5_launch = A5Launch(self.commercial_readiness)
+        self.customer_web = CustomerWeb(self.public_track_record)
