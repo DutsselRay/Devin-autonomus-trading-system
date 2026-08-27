@@ -54,6 +54,20 @@ def product_ceo() -> AgentCharter:
     )
 
 
+@pytest.fixture
+def business_ceo() -> AgentCharter:
+    return load_agent_charter(
+        Path(__file__).parent.parent / "company" / "charters" / "business_ceo.yaml"
+    )
+
+
+@pytest.fixture
+def cao() -> AgentCharter:
+    return load_agent_charter(
+        Path(__file__).parent.parent / "company" / "charters" / "cao.yaml"
+    )
+
+
 def make_proposal(
     decision_id: str = "DEC-000001",
     proposer: str = "global_ceo@0.1.0",

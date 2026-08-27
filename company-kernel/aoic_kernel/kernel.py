@@ -16,6 +16,7 @@ from aoic_kernel.event_bus import EventBus
 from aoic_kernel.task_router import TaskRouter
 from aoic_kernel.decision_engine import DecisionEngine
 from aoic_kernel.publication_gate import PublicationGate
+from aoic_kernel.daily_briefing import DailyBriefing, HumanAttentionScore
 
 
 class CompanyKernel:
@@ -44,3 +45,5 @@ class CompanyKernel:
             policy=self.policy,
             audit=self.audit,
         )
+        self.attention = HumanAttentionScore()
+        self.briefing = DailyBriefing(self.attention)
