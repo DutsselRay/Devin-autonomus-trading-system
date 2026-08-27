@@ -32,3 +32,11 @@ class CharterInvalid(AOICError):
 
 class IdempotencyViolation(AOICError):
     pass
+
+
+class OOSAccessDenied(AOICError):
+    pass
+
+
+class ContaminationError(AOICError):
+    pass

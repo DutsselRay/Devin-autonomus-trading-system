@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from enum import Enum
 from typing import Any, Optional
 from pydantic import BaseModel, Field, field_validator
@@ -228,3 +228,105 @@ class Incident(BaseModel):
     description: str
     status: str
     owner: str
+
+
+class Entity(BaseModel):
+    entity_id: str = Field(pattern=r"^[A-Z0-9_-]+$")
+    symbol: str
+    name: str
+    asset_class: str = "equity"
+    primary_exchange: Optional[str] = None
+    list_date: Optional[datetime] = None
+    delist_date: Optional[datetime] = None
+    status: str = "ACTIVE"
+
+    def is_active_as_of(self, as_of: datetime) -> bool:
+        if self.list_date is not None and as_of < self.list_date:
+            return False
+        if self.delist_date is not None and as_of >= self.delist_date:
+            return False
+        return True
+
+
+class FeatureRecord(BaseModel):
+    record_id: str
+    entity_id: str
+    feature_name: str
+    event_time: datetime
+    released_at: datetime
+    observed_at: datetime
+    ingested_at: datetime
+    valid_from: datetime
+    valid_to: Optional[datetime] = None
+    value: Any
+    unit: Optional[str] = None
+    source: str
+    source_version: Optional[str] = None
+    transformation_version: Optional[str] = None
+    availability_delay: Optional[float] = 0.0
+    quality_flags: list[str] = Field(default_factory=list)
+    content_hash: Optional[str] = None
+
+    def available_at(self) -> datetime:
+        return self.released_at + timedelta(seconds=self.availability_delay or 0)
+
+    def is_available_at(self, as_of: datetime) -> bool:
+        if as_of < self.available_at():
+            return False
+        if self.valid_to is not None and as_of >= self.valid_to:
+            return False
+        return as_of >= self.valid_from
+
+
+class ExperimentStatus(str, Enum):
+    PREREGISTERED = "PREREGISTERED"
+    RUNNING = "RUNNING"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+    SEALED_OOS = "SEALED_OOS"
+
+
+class Experiment(BaseModel):
+    experiment_id: str = Field(pattern=r"^EXP-[0-9]{6}$")
+    name: str
+    hypothesis: str
+    status: ExperimentStatus = ExperimentStatus.PREREGISTERED
+    discoverer: str
+    auditor: Optional[str] = None
+    discovery_start: datetime
+    discovery_end: datetime
+    oos_set_id: Optional[str] = None
+    backtest_id: Optional[str] = None
+    contamination_log: list[str] = Field(default_factory=list)
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class Prediction(BaseModel):
+    prediction_id: str
+    entity_id: str
+    as_of: datetime
+    horizon: str
+    probability: float = Field(ge=0, le=1)
+    expected_return: Optional[float] = None
+    benchmark: Optional[str] = None
+    source_experiment: Optional[str] = None
+
+
+class BacktestRun(BaseModel):
+    backtest_id: str
+    experiment_id: Optional[str] = None
+    strategy: str
+    universe: list[str]
+    start_date: datetime
+    end_date: datetime
+    start_value: float
+    end_value: float
+    costs: float
+    benchmark: str
+    metrics: dict[str, Any] = Field(default_factory=dict)
+
+    @property
+    def total_return(self) -> float:
+        if self.start_value == 0:
+            return 0.0
+        return (self.end_value - self.costs) / self.start_value - 1.0

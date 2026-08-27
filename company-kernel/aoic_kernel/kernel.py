@@ -17,6 +17,7 @@ from aoic_kernel.task_router import TaskRouter
 from aoic_kernel.decision_engine import DecisionEngine
 from aoic_kernel.publication_gate import PublicationGate
 from aoic_kernel.daily_briefing import DailyBriefing, HumanAttentionScore
+from aoic_kernel.opportunity_engine import OpportunityEngine
 
 
 class CompanyKernel:
@@ -47,3 +48,4 @@ class CompanyKernel:
         )
         self.attention = HumanAttentionScore()
         self.briefing = DailyBriefing(self.attention)
+        self.opportunity = OpportunityEngine()
